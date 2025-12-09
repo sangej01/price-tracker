@@ -1,0 +1,18 @@
+[
+  {
+    "fileName": "main-overview.mdc",
+    "description": "Complete system overview documenting the price monitoring architecture, component interactions, and core value propositions"
+  },
+  {
+    "fileName": "price-scanning-algorithms.mdc",
+    "description": "Detailed documentation of the price scanning system including scheduling algorithms, concurrency handling, and error management strategies"
+  },
+  {
+    "fileName": "scraping-architecture.mdc",
+    "description": "Technical specification of the scraping framework, including price extraction algorithms, stock status detection, and vendor integration patterns"
+  },
+  {
+    "fileName": "data-flow.mdc",
+    "description": "Comprehensive documentation of data flow between system components, from price scanning through analytics processing and dashboard presentation"
+  }
+]

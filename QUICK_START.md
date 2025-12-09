@@ -1,0 +1,206 @@
+# ⚡ Quick Start Guide
+
+Get your Price Tracker running in minutes!
+
+---
+
+## 🚀 Fastest Way (Windows)
+
+**Double-click `start-all.bat`** - Done! ✨
+
+This automatically:
+1. ✅ Creates Python virtual environment
+2. ✅ Installs backend dependencies
+3. ✅ Installs frontend dependencies
+4. ✅ Starts both servers
+
+---
+
+## 🛠️ Manual Setup
+
+### Prerequisites
+- **Python 3.10+** ([Download](https://www.python.org/downloads/))
+- **Node.js 18+** ([Download](https://nodejs.org/))
+
+### Option 1: Individual Scripts
+
+**Start Backend:**
+```powershell
+# Double-click or run:
+start-backend.bat
+```
+
+**Start Frontend:**
+```powershell
+# Double-click or run:
+start-frontend.bat
+```
+
+### Option 2: Command Line
+
+**Backend:**
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate          # Windows
+source venv/bin/activate       # Mac/Linux
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+**Frontend (new terminal):**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🌐 Access Your Application
+
+Once started, open your browser:
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Dashboard** | http://localhost:3000 | Main application UI |
+| **Backend API** | http://localhost:8000 | REST API server |
+| **API Docs** | http://localhost:8000/docs | Interactive API documentation |
+
+---
+
+## 📝 First-Time Setup
+
+### 1️⃣ Add a Vendor
+
+Navigate to **Vendors** → **Add Vendor**
+
+**Example:**
+- Name: `Amazon`
+- Domain: `amazon.com`
+
+Repeat for other vendors (eBay, Newegg, etc.)
+
+### 2️⃣ Add a Product
+
+Navigate to **Products** → **Add Product**
+
+**Example:**
+- Name: `NVIDIA RTX 4090`
+- URL: `https://www.amazon.com/dp/B0BHH3DCSG`
+- Vendor: `Amazon`
+- Scan Frequency: `60` minutes
+
+💡 **Pro Tip:** Click **"Test URL"** before saving to verify scraping works!
+
+### 3️⃣ Start Tracking
+
+1. Go to **Dashboard**
+2. Click **"Scan All Products"**
+3. Wait a few seconds
+4. Refresh to see prices and charts! 📊
+
+---
+
+## 🌐 Optional: Commercial Scraping Setup
+
+For protected sites (Amazon with CAPTCHA, eBay auctions), use commercial services:
+
+### Bright Data (Pay-Per-Use)
+```bash
+# Create backend/.env file
+SCRAPING_SERVICE=brightdata
+BRIGHTDATA_API_KEY=your_api_key
+BRIGHTDATA_ZONE=your_zone_name
+```
+
+**Cost:** ~$0.001-0.01 per successful request
+
+**Setup Guide:** [documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)
+
+---
+
+## 💡 Usage Tips
+
+- ✅ **Automatic scanning** runs every 15 minutes
+- ✅ Each product scans at its own frequency
+- ✅ Manual scans available on Dashboard or product pages
+- ✅ Price history shows last 30 days by default
+- ✅ Stock status updates with each scan
+- ✅ Images auto-populate from product pages
+
+---
+
+## 🐛 Troubleshooting
+
+### Port Already in Use
+
+**Backend (port 8000):**
+```bash
+# Edit start-backend.bat or use different port:
+uvicorn app.main:app --reload --port 8001
+```
+
+**Frontend (port 3000):**
+```bash
+# Edit frontend/vite.config.ts
+server: { port: 3001 }
+```
+
+### Scraping Not Working
+
+**Symptoms:**
+- "Failed to fetch page"
+- "Price not available"
+
+**Solutions:**
+1. ✅ Use **"Test URL"** feature to validate URLs
+2. ✅ Try different product URLs
+3. ✅ Enable commercial scraping ([guide](documentation/SCRAPING_SERVICES_GUIDE.md))
+4. ✅ Check if website changed (update scraper selectors)
+
+### Dependencies Won't Install
+
+**Python:**
+```bash
+# Update pip first
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+**Node.js:**
+```bash
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Database Issues
+
+**Reset database:**
+```bash
+cd backend
+rm price_tracker.db
+# Restart backend - database recreates automatically
+```
+
+---
+
+## 📚 Next Steps
+
+- 📖 **User Guide:** [documentation/QUICK_USER_GUIDE.md](documentation/QUICK_USER_GUIDE.md)
+- 🛠️ **Add Custom Scrapers:** [documentation/CUSTOM_SCRAPERS_GUIDE.md](documentation/CUSTOM_SCRAPERS_GUIDE.md)
+- 🌐 **Setup Commercial APIs:** [documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)
+- 🏗️ **Architecture Overview:** [documentation/PROJECT_OVERVIEW.md](documentation/PROJECT_OVERVIEW.md)
+
+---
+
+## 📞 Need Help?
+
+- 📚 Check [documentation/](documentation/) folder
+- 🐛 Review error logs in terminal
+- 📖 Visit http://localhost:8000/docs for API reference
+
+---
+
+**Happy Price Tracking! 🛒📉**
