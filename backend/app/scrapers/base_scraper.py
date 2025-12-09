@@ -18,22 +18,45 @@ class BaseScraper(ABC):
     async def fetch_page(self) -> Optional[str]:
         """
         Fetch the HTML content of the page
-        Uses third-party service if configured, otherwise direct scraping
+        Smart fallback: Try direct (FREE) first, then Bright Data (paid) if blocked
         """
         try:
-            # Try third-party scraping service first (if configured)
+            # Try direct scraping first (FREE!)
+            print(f"📡 Trying direct scraping for {self.url}")
+            async with aiohttp.ClientSession() as session:
+                async with session.get(self.url, headers=self.headers, timeout=30) as response:
+                    if response.status == 200:
+                        html = await response.text()
+                        # Basic validation - check if we got actual content
+                        if len(html) > 1000 and '<html' in html.lower():
+                            print(f"✅ Direct scraping succeeded for {self.url}")
+                            return html
+                        else:
+                            print(f"⚠️ Direct scraping got suspicious response (len={len(html)})")
+                    elif response.status in [403, 503]:
+                        print(f"🚫 Direct scraping blocked (HTTP {response.status}) for {self.url}")
+                    else:
+                        print(f"❌ Direct scraping failed (HTTP {response.status}) for {self.url}")
+            
+            # Fallback to commercial scraping service (if configured)
+            print(f"💰 Falling back to commercial scraping for {self.url}")
             html = await ScrapingServiceClient.fetch_url(self.url)
             if html:
                 return html
             
-            # Fallback to direct scraping
-            async with aiohttp.ClientSession() as session:
-                async with session.get(self.url, headers=self.headers, timeout=30) as response:
-                    if response.status == 200:
-                        return await response.text()
-                    return None
+            print(f"❌ All scraping methods failed for {self.url}")
+            return None
+            
         except Exception as e:
-            print(f"Error fetching page {self.url}: {e}")
+            print(f"❌ Error fetching page {self.url}: {e}")
+            # Try commercial service as last resort
+            try:
+                html = await ScrapingServiceClient.fetch_url(self.url)
+                if html:
+                    print(f"✅ Commercial service succeeded after error")
+                    return html
+            except:
+                pass
             return None
 
     def parse_price(self, price_text: str) -> Optional[float]:
