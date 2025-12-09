@@ -14,7 +14,7 @@ A full-stack web application that monitors product prices, tracks historical dat
 ## ✨ Key Features
 
 - 🔍 **Smart Web Scraping** - Vendor-specific scrapers (Amazon, eBay, Newegg) with fallback support
-- 🌐 **Commercial Scraping Integration** - Optional Bright Data & ScraperAPI for protected sites
+- 🌐 **Commercial Scraping Integration** - Optional Bright Data for protected sites
 - 📊 **Real-time Price Tracking** - Monitor prices with visual change indicators
 - 📈 **Interactive Charts** - Historical price trends with Recharts
 - 🔄 **Automated Scheduling** - Configurable scan frequencies per product
@@ -84,7 +84,6 @@ npm run dev
 - **Vendor-specific scrapers** for Amazon, eBay, Newegg
 - **Generic scraper** with price pattern detection
 - **Bright Data integration** (optional, pay-per-use)
-- **ScraperAPI integration** (optional, subscription)
 
 ---
 
@@ -121,19 +120,15 @@ Click **"View Details"** on any product for:
 
 ---
 
-## 🌐 Commercial Scraping Services
+## 🌐 Commercial Scraping Service
 
-For protected sites (Amazon, eBay with CAPTCHA), integrate commercial services:
+For protected sites (Amazon, eBay with CAPTCHA), integrate Bright Data:
 
-### Bright Data (Recommended)
-- Pay-as-you-go pricing (~$0.001-0.01 per request)
-- Datacenter & Residential proxies
-- 95%+ success rate
-
-### ScraperAPI
-- Subscription-based
-- Automatic retry & rotation
-- Good for high volume
+### Bright Data
+- **Pay-as-you-go pricing** (~$0.001-0.01 per request)
+- **95%+ success rate** on protected sites
+- **Datacenter & Residential proxies**
+- **Unlocker API** handles JavaScript & CAPTCHAs automatically
 
 **Setup Guide:** See [documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)
 
@@ -254,7 +249,7 @@ BRIGHTDATA_ZONE=your_zone
 
 **Solutions:**
 1. Check if URL is correct (use "Test URL" feature)
-2. Website may block scrapers → Use commercial service (Bright Data/ScraperAPI)
+2. Website may block scrapers → Use Bright Data commercial service
 3. Website structure changed → Update scraper selectors
 
 ### API Connection Errors

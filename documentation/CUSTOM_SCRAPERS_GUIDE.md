@@ -308,7 +308,7 @@ BRIGHTDATA_ZONE=your_zone_name
 The `BaseScraper.fetch_page()` method automatically uses the configured service. No code changes needed in your scraper!
 
 **How it works:**
-- Bright Data/ScraperAPI render JavaScript automatically
+- Bright Data renders JavaScript automatically
 - Returns fully-rendered HTML to your scraper
 - Handles CAPTCHAs and anti-bot protection
 - See [SCRAPING_SERVICES_GUIDE.md](SCRAPING_SERVICES_GUIDE.md) for setup
@@ -589,7 +589,6 @@ Before deploying custom scrapers:
 
 - **BeautifulSoup Documentation**: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 - **Bright Data**: https://brightdata.com/ (commercial scraping service)
-- **ScraperAPI**: https://www.scraperapi.com/ (commercial scraping service)
 - **CSS Selectors Reference**: https://www.w3schools.com/cssref/css_selectors.asp
 - **Chrome DevTools**: https://developer.chrome.com/docs/devtools/
 

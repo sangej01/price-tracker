@@ -137,7 +137,7 @@ Run: `cd backend && python test_scraper.py`
 |-------|----------|
 | Price not found | Check selectors with browser DevTools |
 | Getting 403/blocked | Add delays, rotate user agents, or use Bright Data |
-| JavaScript content | Use commercial scraping service (Bright Data/ScraperAPI) |
+| JavaScript content | Use Bright Data commercial scraping service |
 | Wrong currency | Implement `_detect_currency()` method |
 | Inconsistent results | Add multiple fallback selectors |
 

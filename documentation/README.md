@@ -16,7 +16,7 @@ Welcome to the Price Tracker documentation! This folder contains detailed guides
 ## 🛠️ Developer Guides
 
 ### Scraping & Integration
-- **[SCRAPING_SERVICES_GUIDE.md](SCRAPING_SERVICES_GUIDE.md)** - Complete guide to Bright Data & ScraperAPI
+- **[SCRAPING_SERVICES_GUIDE.md](SCRAPING_SERVICES_GUIDE.md)** - Complete guide to Bright Data integration
 - **[QUICK_SETUP_SCRAPING.md](QUICK_SETUP_SCRAPING.md)** - Quick reference for scraping setup
 - **[CUSTOM_SCRAPERS_GUIDE.md](CUSTOM_SCRAPERS_GUIDE.md)** - How to add vendor-specific scrapers
 - **[SCRAPERS_QUICK_REFERENCE.md](SCRAPERS_QUICK_REFERENCE.md)** - Scraper development reference

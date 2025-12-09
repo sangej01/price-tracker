@@ -92,58 +92,15 @@ class ScrapingServiceClient:
             return None
     
     @staticmethod
-    async def fetch_with_scraperapi(url: str) -> Optional[str]:
-        """
-        Fetch URL using ScraperAPI service
-        Docs: https://www.scraperapi.com/documentation
-        """
-        if not settings.is_scraperapi_configured:
-            logger.warning("ScraperAPI not configured, falling back to direct scraping")
-            return None
-        
-        try:
-            # ScraperAPI endpoint
-            api_url = "http://api.scraperapi.com"
-            
-            params = {
-                'api_key': settings.SCRAPERAPI_KEY,
-                'url': url,
-                'render': 'false',  # Set to 'true' for JavaScript rendering
-            }
-            
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    api_url,
-                    params=params,
-                    timeout=aiohttp.ClientTimeout(total=settings.SCRAPING_TIMEOUT)
-                ) as response:
-                    if response.status == 200:
-                        html = await response.text()
-                        logger.info(f"✅ ScraperAPI: Successfully fetched {url}")
-                        return html
-                    else:
-                        logger.error(f"❌ ScraperAPI: HTTP {response.status} for {url}")
-                        return None
-                        
-        except Exception as e:
-            logger.error(f"❌ ScraperAPI error for {url}: {e}")
-            return None
-    
-    @staticmethod
     async def fetch_url(url: str) -> Optional[str]:
         """
         Fetch URL using configured scraping service
         Falls back to direct scraping if no service configured
         """
-        # Try configured service first
+        # Try Bright Data if configured
         if settings.is_brightdata_configured:
             logger.info(f"🌐 Using Bright Data for {url}")
             return await ScrapingServiceClient.fetch_with_brightdata(url)
-        
-        elif settings.is_scraperapi_configured:
-            logger.info(f"🌐 Using ScraperAPI for {url}")
-            return await ScrapingServiceClient.fetch_with_scraperapi(url)
-        
         else:
             # No service configured, return None to trigger direct scraping fallback
             logger.debug(f"📡 No scraping service configured, using direct scraping for {url}")

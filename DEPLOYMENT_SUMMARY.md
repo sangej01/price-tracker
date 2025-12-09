@@ -16,7 +16,8 @@
 
 ### 2. Removed Outdated References
 - ✅ Removed all Playwright references (had Windows asyncio issues)
-- ✅ Updated to commercial scraping services (Bright Data/ScraperAPI)
+- ✅ Updated to Bright Data commercial scraping service
+- ✅ Removed ScraperAPI references (using Bright Data only)
 - ✅ Removed proxy username/password references (using API key method)
 - ✅ Updated troubleshooting guides with working solutions
 
@@ -170,7 +171,7 @@ BRIGHTDATA_ZONE=your_zone_name
 1. **README.md** - Documentation index
 2. **QUICK_USER_GUIDE.md** - How to use the application
 3. **CUSTOM_SCRAPERS_GUIDE.md** - Add vendor scrapers
-4. **SCRAPING_SERVICES_GUIDE.md** - Bright Data/ScraperAPI setup
+4. **SCRAPING_SERVICES_GUIDE.md** - Bright Data integration setup
 5. **QUICK_SETUP_SCRAPING.md** - Quick reference
 6. **PROJECT_OVERVIEW.md** - Architecture details
 7. **SCRAPERS_QUICK_REFERENCE.md** - Development patterns

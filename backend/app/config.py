@@ -25,9 +25,6 @@ class Settings:
     BRIGHTDATA_HOST: Optional[str] = os.getenv("BRIGHTDATA_HOST")
     BRIGHTDATA_PORT: Optional[int] = int(os.getenv("BRIGHTDATA_PORT")) if os.getenv("BRIGHTDATA_PORT") else None
     
-    # ScraperAPI
-    SCRAPERAPI_KEY: Optional[str] = os.getenv("SCRAPERAPI_KEY")
-    
     # Direct Scraping
     SCRAPING_DELAY: float = float(os.getenv("SCRAPING_DELAY", "1"))
     SCRAPING_TIMEOUT: int = int(os.getenv("SCRAPING_TIMEOUT", "10"))
@@ -54,19 +51,6 @@ class Settings:
             return True
         
         return False
-    
-    @property
-    def is_scraperapi_configured(self) -> bool:
-        """Check if ScraperAPI is properly configured"""
-        return bool(
-            self.SCRAPERAPI_KEY 
-            and self.SCRAPING_SERVICE == "scraperapi"
-        )
-    
-    @property
-    def is_using_service(self) -> bool:
-        """Check if any third-party scraping service is configured"""
-        return self.is_brightdata_configured or self.is_scraperapi_configured
 
 
 settings = Settings()

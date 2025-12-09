@@ -1,8 +1,8 @@
-# 🌐 Third-Party Scraping Services Integration Guide
+# 🌐 Bright Data Integration Guide
 
-Your Price Tracker now supports **optional** integration with commercial web scraping services to bypass anti-bot protection!
+Your Price Tracker supports **optional** integration with Bright Data to bypass anti-bot protection on protected websites!
 
-## 🎯 Why Use a Scraping Service?
+## 🎯 Why Use Bright Data?
 
 Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
 - **Cloudflare protection**
@@ -10,234 +10,307 @@ Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
 - **Bot detection**
 - **IP blocking**
 
-**Commercial scraping services solve this** by providing:
+**Bright Data solves this** by providing:
 - ✅ Rotating residential proxies
-- ✅ CAPTCHA solving
+- ✅ Automatic CAPTCHA solving
 - ✅ Browser fingerprinting
 - ✅ High success rates (95%+)
+- ✅ JavaScript rendering
+- ✅ Pay-per-success pricing
 
 ---
 
-## 🚀 Supported Services
+## 💰 Pricing
 
-### **1. Bright Data** (Recommended) 💎
-- **Website**: https://brightdata.com
-- **Best for**: Enterprise-level scraping, highest success rates
-- **Pricing**: Pay-as-you-go, starts at $500/month
-- **Features**: Residential proxies, datacenter proxies, CAPTCHA solving
+### Unlocker API (Recommended)
+- **Pay-as-you-go**: ~$0.001 - $0.01 per successful request
+- **No monthly minimums** for low volume
+- **Free trial credits** available
+- **Perfect for**: Price monitoring (low frequency scans)
 
-### **2. ScraperAPI** 🔧
-- **Website**: https://www.scraperapi.com
-- **Best for**: Budget-friendly, easy setup
-- **Pricing**: Starts at $49/month (1,000,000 API credits)
-- **Features**: Automatic proxy rotation, JS rendering, geotargeting
+### Datacenter Proxies
+- **$0.60 per GB**
+- **Good for**: Basic scraping, less expensive
+- **May be blocked** by some protected sites
+
+### Residential Proxies
+- **$8.40 per GB**
+- **Best for**: Highly protected sites
+- **95%+ success rate** guaranteed
+
+**Website**: https://brightdata.com
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### **Option A: Bright Data**
+### Step 1: Create Bright Data Account
 
-**1. Sign up for Bright Data**
-   - Go to https://brightdata.com
-   - Create an account
-   - Purchase a proxy plan (Residential or Datacenter)
+1. Go to https://brightdata.com
+2. Sign up for an account
+3. Navigate to **Proxies & Scraping Infrastructure**
 
-**2. Get your credentials**
-   - Dashboard → Proxy → Zone settings
-   - Note your: Username, Password, Zone name
+### Step 2: Choose Unlocker API
 
-**3. Configure your Price Tracker**
+1. Click **Get Proxies** → **Unlocker**
+2. Select **API** method (not Web Scraper IDE)
+3. Choose your proxy type:
+   - **Datacenter** (cheaper, may be blocked occasionally)
+   - **Residential** (more expensive, higher success rate)
+4. Select **Shared (Pay per GB)** for low volume
 
-Create a `.env` file in the `backend/` folder:
+### Step 3: Get Your Credentials
+
+After setup, you'll receive:
+- **API Key** (long string starting with `brd_`)
+- **Zone Name** (e.g., `residential_proxy1`, `datacenter_proxy1`)
+- **Host**: `brd.superproxy.io`
+- **Port**: (e.g., `33335`)
+
+### Step 4: Configure Price Tracker
+
+Create `backend/.env` file:
 
 ```env
+# Enable Bright Data
 SCRAPING_SERVICE=brightdata
-BRIGHTDATA_USERNAME=your_username_here
-BRIGHTDATA_PASSWORD=your_password_here
+
+# Unlocker API credentials
+BRIGHTDATA_API_KEY=brd_xxxxxxxxxxxxxxxxxxxxxxxxxx
 BRIGHTDATA_ZONE=residential_proxy1
 ```
 
-**4. Restart the backend**
+**Note:** You don't need username, password, host, or port for Unlocker API - just API key and zone!
+
+### Step 5: Restart Backend
+
 ```bash
 cd backend
 python -m uvicorn app.main:app --reload
 ```
 
----
-
-### **Option B: ScraperAPI**
-
-**1. Sign up for ScraperAPI**
-   - Go to https://www.scraperapi.com
-   - Create an account (free trial available!)
-   - Get your API key from the dashboard
-
-**2. Configure your Price Tracker**
-
-Create a `.env` file in the `backend/` folder:
-
-```env
-SCRAPING_SERVICE=scraperapi
-SCRAPERAPI_KEY=your_api_key_here
-```
-
-**3. Restart the backend**
+Or simply use:
 ```bash
-cd backend
-python -m uvicorn app.main:app --reload
+start-backend.bat
 ```
 
 ---
 
 ## 🧪 Testing Your Setup
 
-After configuration, check the backend logs when you scan products:
+### Check Backend Logs
 
-**✅ Success (using Bright Data):**
-```
-🌐 Using Bright Data for https://www.amazon.com/...
-✅ Bright Data: Successfully fetched https://www.amazon.com/...
-Amazon scrape successful: $1420.00, in_stock=True, image=True
-```
+When scanning products, you should see:
 
-**✅ Success (using ScraperAPI):**
+**✅ Success:**
 ```
-🌐 Using ScraperAPI for https://www.ebay.com/...
-✅ ScraperAPI: Successfully fetched https://www.ebay.com/...
-eBay scrape successful: $899.99, in_stock=True, image=True
+🔓 Using Bright Data Unlocker API for https://www.ebay.com/itm/...
+✅ Bright Data Unlocker API: Successfully fetched https://www.ebay.com/itm/...
+✅ Successfully scanned New NVIDIA RTX 4000 SFF Ada 20GB: $1349.95
 ```
 
-**📡 Fallback (no service configured):**
+**❌ Configuration Error:**
 ```
-📡 No scraping service configured, using direct scraping for https://...
+⚠️ Bright Data not configured, falling back to direct scraping
 ```
 
----
+### Use the Test Tool
 
-## 💰 Cost Comparison
-
-| Service | Free Tier | Starter Plan | Success Rate | Best For |
-|---------|-----------|--------------|--------------|----------|
-| **Bright Data** | ❌ No | $500/month | 99% | Enterprise, high volume |
-| **ScraperAPI** | ✅ 5,000 credits | $49/month | 95% | Small business, testing |
-| **Direct Scraping** | ✅ Free | Free | ~10% | Development only |
-
----
-
-## 🔐 Security Notes
-
-**IMPORTANT**: Never commit your `.env` file to Git!
-
-Your `.gitignore` already includes `.env`, so your API keys stay private.
-
-**Example `.env` file location:**
+```bash
+cd backend
+python test_scraper.py https://www.ebay.com/itm/your-product-url
 ```
-Price Tracker/
-├── backend/
-│   ├── .env          ← Create this file (git ignored)
-│   ├── .env.example  ← Template (safe to commit)
-│   ├── app/
-│   └── ...
+
+Expected output:
+```
+🔓 Using Bright Data Unlocker API for https://www.ebay.com/itm/...
+✅ Bright Data Unlocker API: Successfully fetched
+----------------------------------------
+Price: $1349.95
+In Stock: False
+Currency: USD
+Image URL: https://i.ebayimg.com/...
 ```
 
 ---
 
-## 🎛️ Advanced Configuration
+## 📊 How It Works
 
-### Enable JavaScript Rendering (ScraperAPI)
-
-For sites that heavily use JavaScript:
-
-```env
-SCRAPING_SERVICE=scraperapi
-SCRAPERAPI_KEY=your_key
-SCRAPERAPI_RENDER_JS=true  # Slower but handles dynamic content
+### Without Bright Data (Direct Scraping)
+```
+Your App → Target Website
+           ↓
+        ❌ Blocked by Cloudflare/CAPTCHA
 ```
 
-### Adjust Timeouts
-
-```env
-SCRAPING_TIMEOUT=30  # Seconds (default: 10)
-SCRAPING_DELAY=2     # Delay between requests (default: 1)
+### With Bright Data
 ```
+Your App → Bright Data API → Real Browser → Target Website
+           ↓
+        ✅ Returns clean HTML
+```
+
+Bright Data:
+1. Routes request through residential IP
+2. Renders JavaScript if needed
+3. Solves CAPTCHAs automatically
+4. Returns clean HTML to your scraper
+5. You only pay if successful!
 
 ---
 
-## ❓ FAQ
+## 🔧 Advanced Configuration
 
-**Q: Do I need a scraping service?**  
-A: Not required! The system works without one, but major sites will block direct scraping. Services dramatically improve success rates.
+### Alternative: Traditional Proxy Method
 
-**Q: Which service is better?**  
-A: 
-- **Bright Data**: Best success rates, enterprise features, higher cost
-- **ScraperAPI**: Easier setup, lower cost, good for most use cases
+If you prefer using proxy credentials instead of API:
 
-**Q: Can I switch services later?**  
-A: Yes! Just update your `.env` file and restart the backend.
-
-**Q: What happens if the service fails?**  
-A: The system automatically falls back to direct scraping and logs the error.
-
-**Q: How many products can I track?**  
-A: Depends on your service plan and scan frequency:
-- 100 products × 24 scans/day = 2,400 requests/day = ~72,000/month
-- ScraperAPI starter: 1M credits = ~13,800 products/day
-- Bright Data: Pay per GB, varies by site
-
----
-
-## 🆘 Troubleshooting
-
-**"Failed to fetch" errors:**
-1. Check your API credentials in `.env`
-2. Verify your service account has credits
-3. Check backend logs for detailed error messages
-4. Test your credentials on the service dashboard
-
-**Still not working?**
-- Ensure `.env` is in the `backend/` folder
-- Restart the backend server
-- Check that `SCRAPING_SERVICE` matches your provider name exactly
-- Verify no typos in your credentials
-
----
-
-## 🎓 Recommended Setup for New Users
-
-**1. Start Free (Development)**
-```env
-# No configuration needed!
-# Uses direct scraping
-```
-
-**2. Test with ScraperAPI Trial**
-```env
-SCRAPING_SERVICE=scraperapi
-SCRAPERAPI_KEY=trial_key_from_dashboard
-```
-
-**3. Scale with Bright Data (Production)**
 ```env
 SCRAPING_SERVICE=brightdata
-BRIGHTDATA_USERNAME=your_username
-BRIGHTDATA_PASSWORD=your_password
+BRIGHTDATA_USERNAME=brd-customer-xxx-zone-residential_proxy1
+BRIGHTDATA_PASSWORD=your_password_here
+BRIGHTDATA_HOST=brd.superproxy.io
+BRIGHTDATA_PORT=33335
+```
+
+**Note:** Unlocker API is simpler and recommended!
+
+### Timeout Settings
+
+Adjust scraping timeout (default: 10 seconds):
+
+```env
+SCRAPING_TIMEOUT=30
+```
+
+---
+
+## 💡 Usage Tips
+
+### 1. **Start with Free Trial**
+   - Bright Data offers free trial credits
+   - Test with a few products before committing
+
+### 2. **Choose Right Proxy Type**
+   - **Datacenter**: Try first, cheaper ($0.60/GB)
+   - **Residential**: Use if datacenter gets blocked ($8.40/GB)
+
+### 3. **Monitor Costs**
+   - Each successful request: ~$0.001 - $0.01
+   - Scanning 100 products: ~$0.10 - $1.00
+   - Daily scans (4 products, 4x/day): ~$0.05/day = $1.50/month
+
+### 4. **Scan Frequency**
+   - Lower frequency = lower costs
+   - Set scan frequency to 60-120 minutes for most products
+   - Use manual scans when needed
+
+---
+
+## 🐛 Troubleshooting
+
+### Issue: "Bright Data not configured"
+
+**Check:**
+1. `.env` file exists in `backend/` folder
+2. `SCRAPING_SERVICE=brightdata` is set
+3. Both `BRIGHTDATA_API_KEY` and `BRIGHTDATA_ZONE` are set
+4. No typos in variable names
+5. Backend was restarted after creating `.env`
+
+### Issue: HTTP 400 "zone is required"
+
+**Solution:** Add `BRIGHTDATA_ZONE` to `.env`
+```env
+BRIGHTDATA_ZONE=residential_proxy1
+```
+
+### Issue: HTTP 401 "Unauthorized"
+
+**Solution:** Check your API key
+- API key should start with `brd_`
+- Copy from Bright Data dashboard
+- No extra spaces or quotes
+
+### Issue: HTTP 407 "Proxy Authentication Required"
+
+**Solution:** You're mixing proxy method with API method
+- Remove `BRIGHTDATA_USERNAME`, `PASSWORD`, `HOST`, `PORT`
+- Keep only `BRIGHTDATA_API_KEY` and `BRIGHTDATA_ZONE`
+
+### Issue: Still getting blocked
+
+**Solution:** Upgrade to Residential proxies
+```env
+# Change zone from datacenter to residential
 BRIGHTDATA_ZONE=residential_proxy1
 ```
 
 ---
 
-## 📊 Expected Results
+## 📈 Cost Examples
 
-| Vendor | Direct Scraping | With Service |
-|--------|----------------|--------------|
-| Amazon | ❌ Blocked (~5%) | ✅ Works (~98%) |
-| eBay | ❌ Blocked (~10%) | ✅ Works (~95%) |
-| Newegg | ❌ Blocked (~15%) | ✅ Works (~97%) |
-| Small sites | ✅ Works (~80%) | ✅ Works (~99%) |
+### Low Volume (Hobby)
+- **Products**: 5
+- **Scans per day**: 24 (every hour)
+- **Cost**: ~$0.12 - $1.20/day = $3.60 - $36/month
+
+### Medium Volume (Small Business)
+- **Products**: 50
+- **Scans per day**: 96 (every 15 min)
+- **Cost**: ~$0.48 - $4.80/day = $14.40 - $144/month
+
+### High Volume (Enterprise)
+- **Products**: 500
+- **Scans per day**: 2,000
+- **Cost**: ~$2 - $20/day = $60 - $600/month
+
+**Remember:** You only pay for successful requests!
 
 ---
 
-**🎉 You're all set!** Your price tracker can now scrape even the most protected e-commerce sites!
+## 🔄 Switching Back to Direct Scraping
 
+To disable Bright Data and use direct scraping:
+
+```env
+# Comment out or remove these lines
+# SCRAPING_SERVICE=brightdata
+# BRIGHTDATA_API_KEY=...
+# BRIGHTDATA_ZONE=...
+```
+
+Or set to direct:
+```env
+SCRAPING_SERVICE=direct
+```
+
+Restart backend and your scrapers will use direct HTTP requests.
+
+---
+
+## 🆚 When to Use Bright Data
+
+| Scenario | Use Bright Data? |
+|----------|------------------|
+| Testing new scrapers | ❌ No, try direct first |
+| Amazon blocked you | ✅ Yes |
+| eBay showing CAPTCHA | ✅ Yes |
+| Newegg working fine | ❌ No, direct is cheaper |
+| High-value products | ✅ Yes, ensure data |
+| Low-frequency scans | ✅ Yes, very affordable |
+
+---
+
+## 📞 Support
+
+- **Bright Data Docs**: https://docs.brightdata.com/
+- **API Reference**: https://docs.brightdata.com/api-reference
+- **Support**: support@brightdata.com
+- **Price Tracker Issues**: See main [README](../README.md)
+
+---
+
+**🎉 Happy scraping with Bright Data!**
+
+*Now you can track prices on any website, no matter how protected!*
