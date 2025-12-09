@@ -45,7 +45,7 @@ python -m venv venv
 venv\Scripts\activate          # Windows
 source venv/bin/activate       # Mac/Linux
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8081
 ```
 
 **Frontend (new terminal):**
@@ -64,8 +64,8 @@ Once started, open your browser:
 | Service | URL | Description |
 |---------|-----|-------------|
 | **Dashboard** | http://localhost:3000 | Main application UI |
-| **Backend API** | http://localhost:8000 | REST API server |
-| **API Docs** | http://localhost:8000/docs | Interactive API documentation |
+| **Backend API** | http://localhost:8081 | REST API server |
+| **API Docs** | http://localhost:8081/docs | Interactive API documentation |
 
 ---
 
@@ -135,10 +135,10 @@ BRIGHTDATA_ZONE=your_zone_name
 
 ### Port Already in Use
 
-**Backend (port 8000):**
+**Backend (port 8081):**
 ```bash
 # Edit start-backend.bat or use different port:
-uvicorn app.main:app --reload --port 8001
+uvicorn app.main:app --reload --port 8082
 ```
 
 **Frontend (port 3000):**
@@ -199,7 +199,7 @@ rm price_tracker.db
 
 - 📚 Check [documentation/](documentation/) folder
 - 🐛 Review error logs in terminal
-- 📖 Visit http://localhost:8000/docs for API reference
+- 📖 Visit http://localhost:8081/docs for API reference
 
 ---
 

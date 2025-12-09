@@ -219,7 +219,7 @@ BRIGHTDATA_ZONE=your_zone_name
 - **Main README:** [README.md](README.md)
 - **Quick Setup:** [QUICK_START.md](QUICK_START.md)
 - **All Guides:** [documentation/](documentation/)
-- **API Docs:** http://localhost:8000/docs (when running)
+- **API Docs:** http://localhost:8081/docs (when running)
 
 ---
 

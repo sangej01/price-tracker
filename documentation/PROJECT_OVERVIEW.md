@@ -95,9 +95,9 @@ Double-click `start-all.bat` - Done! 🎉
 ## 🌐 Access Points
 
 - **Frontend Dashboard**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **Alternative Docs**: http://localhost:8000/redoc
+- **Backend API**: http://localhost:8081
+- **API Documentation**: http://localhost:8081/docs
+- **Alternative Docs**: http://localhost:8081/redoc
 
 ## 📊 Database Schema
 

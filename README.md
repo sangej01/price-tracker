@@ -56,8 +56,8 @@ npm run dev
 
 **Access:**
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+- Backend API: http://localhost:8081
+- API Docs: http://localhost:8081/docs
 
 ---
 
@@ -253,7 +253,7 @@ BRIGHTDATA_ZONE=your_zone
 3. Website structure changed → Update scraper selectors
 
 ### API Connection Errors
-- Ensure backend is running on port 8000
+- Ensure backend is running on port 8081
 - Check CORS settings in `backend/app/main.py`
 
 ### Database Reset
@@ -298,7 +298,7 @@ Contributions welcome! Please:
 
 - **Documentation:** [documentation/](documentation/)
 - **Issues:** Create a GitHub issue
-- **API Docs:** http://localhost:8000/docs (when running)
+- **API Docs:** http://localhost:8081/docs (when running)
 
 ---
 
