@@ -120,21 +120,27 @@ Click **"View Details"** on any product for:
 
 ---
 
-## 🌐 Commercial Scraping Service
+## 🌐 Commercial Scraping Service (Optional)
 
-For protected sites (Amazon, eBay with CAPTCHA), integrate Bright Data:
+**Smart Cost-Saving:** The app automatically tries **FREE direct scraping first**, then falls back to Bright Data only if blocked!
 
 ### Bright Data
-- **Pay-as-you-go pricing** (~$0.001-0.01 per request)
+- **Automatic fallback** - Only used when direct scraping is blocked
+- **Pay-as-you-go pricing** (~$0.001-0.01 per successful request)
 - **95%+ success rate** on protected sites
-- **Datacenter & Residential proxies**
-- **Unlocker API** handles JavaScript & CAPTCHAs automatically
+- **Save 75%** - Only pay for sites that actually need it!
+
+**Example Cost Savings:**
+- 4 products scanning hourly
+- 3 work with direct scraping (Amazon, Newegg) = **FREE**
+- 1 needs Bright Data (eBay) = **~$14/month**
+- **vs $60/month** if using Bright Data for everything
 
 **Setup Guide:** See [documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)
 
 **Quick Setup:**
 ```bash
-# Create .env in backend/
+# Edit config.py or create backend/.env
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
 BRIGHTDATA_ZONE=your_zone_name

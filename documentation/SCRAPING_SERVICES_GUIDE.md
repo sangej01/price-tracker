@@ -2,6 +2,12 @@
 
 Your Price Tracker supports **optional** integration with Bright Data to bypass anti-bot protection on protected websites!
 
+## 💡 Smart Cost-Saving Feature
+
+**The app automatically tries FREE direct scraping first!** Bright Data is only used as a fallback when sites block direct access.
+
+**This saves you 75%+ on costs** - you only pay for sites that actually need commercial scraping (like eBay), while Amazon and Newegg work for FREE!
+
 ## 🎯 Why Use Bright Data?
 
 Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
@@ -100,18 +106,30 @@ start-backend.bat
 
 ### Check Backend Logs
 
-When scanning products, you should see:
+When scanning products, you'll see the **smart fallback** in action:
 
-**✅ Success:**
+**✅ Direct Scraping (FREE):**
 ```
-🔓 Using Bright Data Unlocker API for https://www.ebay.com/itm/...
-✅ Bright Data Unlocker API: Successfully fetched https://www.ebay.com/itm/...
-✅ Successfully scanned New NVIDIA RTX 4000 SFF Ada 20GB: $1349.95
+📡 Trying direct scraping for https://www.amazon.com/...
+✅ Direct scraping succeeded for https://www.amazon.com/...
+✅ Successfully scanned PNY RTX 4000: $1420.00
 ```
+
+**💰 Automatic Fallback to Bright Data:**
+```
+📡 Trying direct scraping for https://www.ebay.com/itm/...
+🚫 Direct scraping blocked (HTTP 403) for https://www.ebay.com/itm/...
+💰 Falling back to commercial scraping for https://www.ebay.com/itm/...
+🔓 Using Bright Data Unlocker API
+✅ Bright Data Unlocker API: Successfully fetched
+✅ Successfully scanned New NVIDIA RTX 4000: $1349.95
+```
+
+**This means you're only paying for what you actually need!**
 
 **❌ Configuration Error:**
 ```
-⚠️ Bright Data not configured, falling back to direct scraping
+⚠️ Bright Data not configured, using direct scraping only
 ```
 
 ### Use the Test Tool

@@ -85,10 +85,11 @@ Price Tracker/
 ## 🌐 Current Implementation Status
 
 ### Working Features ✅
-- ✅ **Amazon Scraper** - Direct scraping working
-- ✅ **eBay Scraper** - Working with Bright Data
-- ✅ **Newegg Scraper** - Direct scraping working
-- ✅ **Bright Data Integration** - Tested and confirmed
+- ✅ **Amazon Scraper** - Direct scraping working (FREE)
+- ✅ **eBay Scraper** - Automatic fallback to Bright Data (saves 75% vs always-paid)
+- ✅ **Newegg Scraper** - Direct scraping working (FREE)
+- ✅ **Smart Scraping Fallback** - Tries free first, Bright Data only if blocked
+- ✅ **Bright Data Integration** - Tested and confirmed (pay-per-success)
 - ✅ **Price History Tracking** - Database and charts working
 - ✅ **Stock Monitoring** - In/Out of stock detection
 - ✅ **Image Extraction** - Auto-populates product images

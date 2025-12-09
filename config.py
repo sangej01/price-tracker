@@ -21,7 +21,7 @@ class BackendConfig:
     DATABASE_URL = "sqlite:///./backend/price_tracker.db"
     
     # Scheduler
-    SCAN_INTERVAL_MINUTES = 15    # How often scheduler checks for due products
+    SCAN_INTERVAL_MINUTES = 480    # How often scheduler checks for due products
     
     # Scraping Settings
     # -----------------------------------------------------------------------------
