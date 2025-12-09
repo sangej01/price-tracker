@@ -2,7 +2,18 @@
 Central Configuration File
 ===========================
 All user-configurable settings for the Price Tracker application.
-Modify this file to customize backend and frontend behavior.
+
+⚠️ IMPORTANT: This file contains DEFAULTS only!
+   - For non-sensitive settings: Edit values here, run `python apply_config.py`
+   - For API keys/secrets: Set directly in backend/.env file (never commit!)
+   
+Safe to edit here:
+  - PORT, HOST, SCAN_INTERVAL_MINUTES, timeouts, etc.
+  
+Keep in .env only (DON'T put real values here):
+  - BRIGHTDATA_API_KEY
+  - BRIGHTDATA_ZONE
+  - Any other secrets
 """
 
 # =============================================================================
@@ -43,11 +54,15 @@ class BackendConfig:
     
     # Commercial Scraping Service (Optional)
     # Options: "direct", "brightdata"
+    # NOTE: These are just DEFAULTS. Set actual values in backend/.env file!
     SCRAPING_SERVICE = "direct"   # Default to direct scraping
     
-    # Bright Data Configuration (leave empty if not using)
-    BRIGHTDATA_API_KEY = ""       # Your Bright Data API key
-    BRIGHTDATA_ZONE = ""          # Your zone name (e.g., "residential_proxy1")
+    # Bright Data Configuration
+    # ⚠️ DO NOT put real API keys here! Set them in backend/.env file:
+    #    BRIGHTDATA_API_KEY=your_actual_key
+    #    BRIGHTDATA_ZONE=your_actual_zone
+    BRIGHTDATA_API_KEY = ""       # Default (empty = not configured)
+    BRIGHTDATA_ZONE = ""          # Default (empty = not configured)
 
 
 # =============================================================================
