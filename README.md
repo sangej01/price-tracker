@@ -221,20 +221,27 @@ python backend/test_scraper.py https://product-url
 
 ## 🔧 Configuration
 
-### Environment Variables (Optional)
-Create `backend/.env`:
-```env
-# Database
-DATABASE_URL=sqlite:///./sql_app.db
+### Central Configuration (Recommended)
 
-# Scheduler
-SCAN_INTERVAL_MINUTES=15
+All settings are in **`config.py`** at the root:
 
-# Commercial Scraping (Optional)
-SCRAPING_SERVICE=brightdata
-BRIGHTDATA_API_KEY=your_key
-BRIGHTDATA_ZONE=your_zone
+```python
+# config.py
+class BackendConfig:
+    PORT = 8081                    # Change server port
+    SCRAPING_SERVICE = "brightdata"  # Enable Bright Data
+    BRIGHTDATA_API_KEY = "your_key"
 ```
+
+**Apply changes:**
+```bash
+python apply_config.py  # Generates .env files
+```
+
+**See:** [CONFIG_GUIDE.md](CONFIG_GUIDE.md) for full documentation
+
+### Manual Configuration (Advanced)
+Edit `backend/.env` and `frontend/.env` directly (overwritten by `apply_config.py`)
 
 ### Scan Frequency
 - **Per-product**: Set when creating/editing products (default: 60 minutes)

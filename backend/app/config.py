@@ -1,5 +1,6 @@
 """
 Application configuration from environment variables
+Loads from .env file or uses defaults from root config.py
 """
 import os
 from typing import Optional
@@ -10,30 +11,35 @@ load_dotenv()
 
 
 class Settings:
-    """Application settings"""
+    """Application settings loaded from environment variables"""
     
-    # Scraping Service Configuration
-    SCRAPING_SERVICE: str = os.getenv("SCRAPING_SERVICE", "direct").lower()
-    
-    # Bright Data - Unlocker API (simpler, recommended)
-    BRIGHTDATA_API_KEY: Optional[str] = os.getenv("BRIGHTDATA_API_KEY")
-    BRIGHTDATA_ZONE: Optional[str] = os.getenv("BRIGHTDATA_ZONE")  # Proxy/zone name
-    
-    # Bright Data - Traditional Proxy (alternative method)
-    BRIGHTDATA_USERNAME: Optional[str] = os.getenv("BRIGHTDATA_USERNAME")
-    BRIGHTDATA_PASSWORD: Optional[str] = os.getenv("BRIGHTDATA_PASSWORD")
-    BRIGHTDATA_HOST: Optional[str] = os.getenv("BRIGHTDATA_HOST")
-    BRIGHTDATA_PORT: Optional[int] = int(os.getenv("BRIGHTDATA_PORT")) if os.getenv("BRIGHTDATA_PORT") else None
-    
-    # Direct Scraping
-    SCRAPING_DELAY: float = float(os.getenv("SCRAPING_DELAY", "1"))
-    SCRAPING_TIMEOUT: int = int(os.getenv("SCRAPING_TIMEOUT", "10"))
+    # Server Configuration
+    SERVER_HOST: str = os.getenv("SERVER_HOST", "0.0.0.0")
+    SERVER_PORT: int = int(os.getenv("SERVER_PORT", "8081"))
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
     
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./price_tracker.db")
     
-    # Application
-    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
+    # Scheduler
+    SCAN_INTERVAL_MINUTES: int = int(os.getenv("SCAN_INTERVAL_MINUTES", "15"))
+    
+    # Scraping Settings
+    SCRAPING_DELAY: float = float(os.getenv("SCRAPING_DELAY", "1"))
+    SCRAPING_TIMEOUT: int = int(os.getenv("SCRAPING_TIMEOUT", "10"))
+    
+    # Scraping Service Configuration
+    SCRAPING_SERVICE: str = os.getenv("SCRAPING_SERVICE", "direct").lower()
+    
+    # Bright Data - Unlocker API (recommended)
+    BRIGHTDATA_API_KEY: Optional[str] = os.getenv("BRIGHTDATA_API_KEY")
+    BRIGHTDATA_ZONE: Optional[str] = os.getenv("BRIGHTDATA_ZONE")
+    
+    # Bright Data - Traditional Proxy (alternative)
+    BRIGHTDATA_USERNAME: Optional[str] = os.getenv("BRIGHTDATA_USERNAME")
+    BRIGHTDATA_PASSWORD: Optional[str] = os.getenv("BRIGHTDATA_PASSWORD")
+    BRIGHTDATA_HOST: Optional[str] = os.getenv("BRIGHTDATA_HOST")
+    BRIGHTDATA_PORT: Optional[int] = int(os.getenv("BRIGHTDATA_PORT")) if os.getenv("BRIGHTDATA_PORT") else None
     
     @property
     def is_brightdata_configured(self) -> bool:
