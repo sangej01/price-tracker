@@ -24,6 +24,20 @@ class BackendConfig:
     SCAN_INTERVAL_MINUTES = 15    # How often scheduler checks for due products
     
     # Scraping Settings
+    # -----------------------------------------------------------------------------
+    # 💰 COST CALCULATOR (with Bright Data - $0.005 avg per request)
+    # -----------------------------------------------------------------------------
+    # | Scan Interval | Products | Scans/Day | Requests/Day | Daily Cost | Monthly Cost |
+    # |---------------|----------|-----------|--------------|------------|--------------|
+    # | Hourly        | 4        | 24        | 96           | $0.10-$0.96| $3-$29       |
+    # | Every 2 hours | 4        | 12        | 48           | $0.05-$0.48| $1.50-$14    |
+    # | Every 4 hours | 4        | 6         | 24           | $0.02-$0.24| $0.60-$7     |
+    # | Every 15 min  | 4        | 96        | 384          | $0.38-$3.84| $11-$115     |
+    # -----------------------------------------------------------------------------
+    # 💡 TIP: Use direct scraping (free) when possible, Bright Data only for blocked sites
+    # Example: Only eBay needs Bright Data = 1 product × 96/day = ~$14/month vs $60/month
+    # -----------------------------------------------------------------------------
+    
     SCRAPING_DELAY = 1.0          # Delay between requests (seconds)
     SCRAPING_TIMEOUT = 10         # Request timeout (seconds)
     
