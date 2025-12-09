@@ -79,7 +79,7 @@ class BackendConfig:
     # Commercial Scraping
     SCRAPING_SERVICE = "direct"    # "direct" or "brightdata"
     BRIGHTDATA_API_KEY = ""        # Your Bright Data key
-    BRIGHTDATA_ZONE = ""           # Your zone name
+    BRIGHTDATA_PROXY_NAME = ""     # Your proxy name
 ```
 
 ### Frontend Configuration
@@ -116,7 +116,7 @@ Run `python apply_config.py`, restart servers. Frontend automatically connects!
 class BackendConfig:
     SCRAPING_SERVICE = "brightdata"
     BRIGHTDATA_API_KEY = "brd_xxxxx..."
-    BRIGHTDATA_ZONE = "residential_proxy1"
+    BRIGHTDATA_PROXY_NAME = "residential_proxy1"
 ```
 
 ### Change Scan Frequency

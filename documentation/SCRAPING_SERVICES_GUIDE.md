@@ -69,7 +69,8 @@ Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
 
 After setup, you'll receive:
 - **API Key** (long string starting with `brd_`)
-- **Zone Name** (e.g., `residential_proxy1`, `datacenter_proxy1`)
+- **Proxy Name** (e.g., `residential_proxy1`, `datacenter_proxy1`)
+  - Note: Bright Data may call this "Zone" in their API docs
 - **Host**: `brd.superproxy.io`
 - **Port**: (e.g., `33335`)
 
@@ -83,10 +84,10 @@ SCRAPING_SERVICE=brightdata
 
 # Unlocker API credentials
 BRIGHTDATA_API_KEY=brd_xxxxxxxxxxxxxxxxxxxxxxxxxx
-BRIGHTDATA_ZONE=residential_proxy1
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
-**Note:** You don't need username, password, host, or port for Unlocker API - just API key and zone!
+**Note:** You don't need username, password, host, or port for Unlocker API - just API key and proxy name!
 
 ### Step 5: Restart Backend
 
@@ -232,15 +233,15 @@ SCRAPING_TIMEOUT=30
 **Check:**
 1. `.env` file exists in `backend/` folder
 2. `SCRAPING_SERVICE=brightdata` is set
-3. Both `BRIGHTDATA_API_KEY` and `BRIGHTDATA_ZONE` are set
+3. Both `BRIGHTDATA_API_KEY` and `BRIGHTDATA_PROXY_NAME` are set
 4. No typos in variable names
 5. Backend was restarted after creating `.env`
 
 ### Issue: HTTP 400 "zone is required"
 
-**Solution:** Add `BRIGHTDATA_ZONE` to `.env`
+**Solution:** Add `BRIGHTDATA_PROXY_NAME` to `.env`
 ```env
-BRIGHTDATA_ZONE=residential_proxy1
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
 ### Issue: HTTP 401 "Unauthorized"
@@ -254,14 +255,14 @@ BRIGHTDATA_ZONE=residential_proxy1
 
 **Solution:** You're mixing proxy method with API method
 - Remove `BRIGHTDATA_USERNAME`, `PASSWORD`, `HOST`, `PORT`
-- Keep only `BRIGHTDATA_API_KEY` and `BRIGHTDATA_ZONE`
+- Keep only `BRIGHTDATA_API_KEY` and `BRIGHTDATA_PROXY_NAME`
 
 ### Issue: Still getting blocked
 
 **Solution:** Upgrade to Residential proxies
 ```env
-# Change zone from datacenter to residential
-BRIGHTDATA_ZONE=residential_proxy1
+# Change proxy from datacenter to residential
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
 ---

@@ -33,7 +33,7 @@ class Settings:
     
     # Bright Data - Unlocker API (recommended)
     BRIGHTDATA_API_KEY: Optional[str] = os.getenv("BRIGHTDATA_API_KEY")
-    BRIGHTDATA_ZONE: Optional[str] = os.getenv("BRIGHTDATA_ZONE")
+    BRIGHTDATA_PROXY_NAME: Optional[str] = os.getenv("BRIGHTDATA_PROXY_NAME")
     
     # Bright Data - Traditional Proxy (alternative)
     BRIGHTDATA_USERNAME: Optional[str] = os.getenv("BRIGHTDATA_USERNAME")
@@ -47,8 +47,8 @@ class Settings:
         if self.SCRAPING_SERVICE != "brightdata":
             return False
         
-        # Method 1: Unlocker API (simpler - just API key + zone)
-        if self.BRIGHTDATA_API_KEY and self.BRIGHTDATA_ZONE:
+        # Method 1: Unlocker API (simpler - just API key + proxy name)
+        if self.BRIGHTDATA_API_KEY and self.BRIGHTDATA_PROXY_NAME:
             return True
         
         # Method 2: Traditional proxy (username/password/host/port)

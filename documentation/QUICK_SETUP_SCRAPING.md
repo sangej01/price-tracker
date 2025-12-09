@@ -14,7 +14,7 @@
 ```env
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key_here
-BRIGHTDATA_ZONE=residential_proxy1
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
 **3. Restart backend:**
@@ -108,7 +108,7 @@ Failed to fetch Amazon page (Cloudflare protection)
 ```env
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_key
-BRIGHTDATA_ZONE=your_zone
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
 ### Disable (Use Direct Scraping)
@@ -120,7 +120,7 @@ Or simply comment out:
 ```env
 # SCRAPING_SERVICE=brightdata
 # BRIGHTDATA_API_KEY=...
-# BRIGHTDATA_ZONE=...
+# BRIGHTDATA_PROXY_NAME=...
 ```
 
 **Remember to restart backend after changes!**

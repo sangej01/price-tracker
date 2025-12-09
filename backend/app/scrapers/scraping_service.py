@@ -24,7 +24,7 @@ class ScrapingServiceClient:
         
         try:
             # Method 1: Unlocker API (recommended - API endpoint method!)
-            if settings.BRIGHTDATA_API_KEY and settings.BRIGHTDATA_ZONE:
+            if settings.BRIGHTDATA_API_KEY and settings.BRIGHTDATA_PROXY_NAME:
                 logger.info(f"🔓 Using Bright Data Unlocker API for {url}")
                 
                 # Bright Data Unlocker API endpoint
@@ -36,7 +36,7 @@ class ScrapingServiceClient:
                 }
                 
                 payload = {
-                    'zone': settings.BRIGHTDATA_ZONE,
+                    'zone': settings.BRIGHTDATA_PROXY_NAME,  # 'zone' is Bright Data's API parameter name
                     'url': url,
                     'format': 'raw'  # Get raw HTML
                 }

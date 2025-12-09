@@ -111,7 +111,7 @@ For protected sites (Amazon with CAPTCHA, eBay auctions), use commercial service
 # Create backend/.env file
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
-BRIGHTDATA_ZONE=your_zone_name
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
 **Cost:** ~$0.001-0.01 per successful request

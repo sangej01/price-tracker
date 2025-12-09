@@ -143,7 +143,7 @@ Click **"View Details"** on any product for:
 # Edit config.py or create backend/.env
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
-BRIGHTDATA_ZONE=your_zone_name
+BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 ```
 
 ---

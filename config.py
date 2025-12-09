@@ -12,7 +12,7 @@ Safe to edit here:
   
 Keep in .env only (DON'T put real values here):
   - BRIGHTDATA_API_KEY
-  - BRIGHTDATA_ZONE
+  - BRIGHTDATA_PROXY_NAME
   - Any other secrets
 """
 
@@ -60,9 +60,9 @@ class BackendConfig:
     # Bright Data Configuration
     # ⚠️ DO NOT put real API keys here! Set them in backend/.env file:
     #    BRIGHTDATA_API_KEY=your_actual_key
-    #    BRIGHTDATA_ZONE=your_actual_zone
+    #    BRIGHTDATA_PROXY_NAME=your_proxy_name
     BRIGHTDATA_API_KEY = ""       # Default (empty = not configured)
-    BRIGHTDATA_ZONE = ""          # Default (empty = not configured)
+    BRIGHTDATA_PROXY_NAME = ""    # Default (your proxy/zone name from Bright Data)
 
 
 # =============================================================================
@@ -110,7 +110,7 @@ SCRAPING_TIMEOUT={BackendConfig.SCRAPING_TIMEOUT}
 
 SCRAPING_SERVICE={BackendConfig.SCRAPING_SERVICE}
 BRIGHTDATA_API_KEY={BackendConfig.BRIGHTDATA_API_KEY}
-BRIGHTDATA_ZONE={BackendConfig.BRIGHTDATA_ZONE}
+BRIGHTDATA_PROXY_NAME={BackendConfig.BRIGHTDATA_PROXY_NAME}
 """
     
     # Frontend .env
