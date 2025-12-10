@@ -157,6 +157,7 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 
 ### For Users
 - **[QUICK_START.md](QUICK_START.md)** - Setup and installation
+- **[NETWORK_ACCESS.md](NETWORK_ACCESS.md)** - Access from other devices / Tailscale
 - **[documentation/QUICK_USER_GUIDE.md](documentation/QUICK_USER_GUIDE.md)** - How to use the app
 - **[documentation/DEMO_SUMMARY.md](documentation/DEMO_SUMMARY.md)** - Visual walkthrough
 
