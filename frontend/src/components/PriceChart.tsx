@@ -6,9 +6,10 @@ interface PriceChartProps {
 }
 
 export default function PriceChart({ data }: PriceChartProps) {
-  const chartData = data.map(item => {
+  const chartData = data.map((item, index) => {
     const dateObj = new Date(item.scraped_at + 'Z') // Add Z to convert from UTC
     return {
+      // Use unique key combining date and index to avoid duplicate keys
       date: dateObj.toLocaleDateString(),
       dateTime: dateObj.toLocaleString('en-US', { 
         month: 'short', 
@@ -16,11 +17,12 @@ export default function PriceChart({ data }: PriceChartProps) {
         year: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
-        second: '2-digit',
         hour12: true 
       }),
       price: item.price,
       timestamp: dateObj.getTime(),
+      // Unique identifier for Recharts
+      id: `${dateObj.getTime()}-${index}`,
     }
   })
 
@@ -38,9 +40,12 @@ export default function PriceChart({ data }: PriceChartProps) {
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
-            dataKey="date" 
+            dataKey="dateTime"
             stroke="#6b7280"
             tick={{ fontSize: 12 }}
+            angle={-45}
+            textAnchor="end"
+            height={80}
           />
           <YAxis 
             stroke="#6b7280"
@@ -50,11 +55,6 @@ export default function PriceChart({ data }: PriceChartProps) {
           />
           <Tooltip 
             formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
-            labelFormatter={(label) => {
-              // Find the full dateTime for this label
-              const dataPoint = chartData.find(d => d.date === label)
-              return dataPoint?.dateTime || label
-            }}
             contentStyle={{
               backgroundColor: 'white',
               border: '1px solid #e5e7eb',
