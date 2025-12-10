@@ -1,12 +1,33 @@
+import { useState } from 'react'
 import { ProductWithLatestPrice } from '../api/types'
-import { TrendingDown, TrendingUp, Minus, ExternalLink, Eye } from 'lucide-react'
+import { TrendingDown, TrendingUp, Minus, ExternalLink, Eye, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import api from '../api/client'
 
 interface ProductCardProps {
   product: ProductWithLatestPrice
+  onUpdate?: () => void
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, onUpdate }: ProductCardProps) {
+  const [scanFrequency, setScanFrequency] = useState(product.scan_frequency_minutes)
+  const [updating, setUpdating] = useState(false)
+
+  const handleFrequencyChange = async (newFrequency: number) => {
+    try {
+      setUpdating(true)
+      setScanFrequency(newFrequency)
+      await api.put(`/api/products/${product.id}`, {
+        scan_frequency_minutes: newFrequency
+      })
+      if (onUpdate) onUpdate()
+    } catch (error) {
+      console.error('Error updating scan frequency:', error)
+      setScanFrequency(product.scan_frequency_minutes) // Revert on error
+    } finally {
+      setUpdating(false)
+    }
+  }
   const getPriceChangeIndicator = () => {
     if (!product.price_change || product.price_change === 0) {
       return (
@@ -114,9 +135,35 @@ export default function ProductCard({ product }: ProductCardProps) {
           </a>
         </div>
 
+        {/* Scan Frequency Quick Edit */}
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center text-gray-500">
+              <Clock className="h-3 w-3 mr-1" />
+              <span>Scan every:</span>
+            </div>
+            <select
+              value={scanFrequency}
+              onChange={(e) => handleFrequencyChange(parseInt(e.target.value))}
+              disabled={updating}
+              className="text-xs rounded border-gray-300 focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50"
+            >
+              <option value={5}>5 min</option>
+              <option value={10}>10 min</option>
+              <option value={15}>15 min</option>
+              <option value={30}>30 min</option>
+              <option value={60}>1 hour</option>
+              <option value={120}>2 hours</option>
+              <option value={240}>4 hours</option>
+              <option value={480}>8 hours</option>
+              <option value={1440}>24 hours</option>
+            </select>
+          </div>
+        </div>
+
         {/* Last Scanned */}
         {product.last_scanned_at && (
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-xs text-gray-400 mt-2">
             Last checked: {new Date(product.last_scanned_at + 'Z').toLocaleString()}
           </p>
         )}

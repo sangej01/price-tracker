@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BarChart3, Package, Store, TrendingUp } from 'lucide-react'
+import { BarChart3, Package, Store, TrendingUp, Settings } from 'lucide-react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -12,6 +12,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Dashboard', href: '/', icon: BarChart3 },
     { name: 'Products', href: '/products', icon: Package },
     { name: 'Vendors', href: '/vendors', icon: Store },
+    { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
   return (

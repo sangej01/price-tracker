@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .database import engine, Base
-from .api import vendors, products, dashboard, scanner
+from .api import vendors, products, dashboard, scanner, settings
 from .scheduler import start_scheduler
 
 
@@ -48,6 +48,7 @@ app.include_router(vendors.router)
 app.include_router(products.router)
 app.include_router(dashboard.router)
 app.include_router(scanner.router)
+app.include_router(settings.router)
 
 
 @app.get("/")
