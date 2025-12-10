@@ -33,7 +33,7 @@ export default function PriceChart({ data }: PriceChartProps) {
           <YAxis 
             stroke="#6b7280"
             tick={{ fontSize: 12 }}
-            domain={['auto', 'auto']}
+            domain={[0, 'auto']}
             tickFormatter={(value) => `$${value.toFixed(2)}`}
           />
           <Tooltip 
