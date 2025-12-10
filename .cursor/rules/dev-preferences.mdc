@@ -15,6 +15,16 @@ This file specifies the developer's preferred tools, frameworks, and workflows f
 - Follow PEP 8 conventions
 - Clear, descriptive variable names
 
+### Backend Framework
+- **Prefer FastAPI** (first choice)
+- Flask API (second choice)
+- Django (third choice - use only if specifically needed)
+
+**Reasoning:**
+- FastAPI: Modern, fast, automatic API documentation, native async support, type hints
+- Flask: Lightweight, flexible, good for smaller projects
+- Django: Full-featured but often overkill, slower, more opinionated
+
 ## JavaScript/Node Development
 
 ### Package Management
