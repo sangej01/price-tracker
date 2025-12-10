@@ -7,6 +7,8 @@ from typing import Dict, Any
 from bs4 import BeautifulSoup
 import logging
 import asyncio
+import json
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +44,12 @@ class NeweggScraper(BaseScraper):
             
             soup = BeautifulSoup(html, 'lxml')
             
-            # Extract price
-            price = self._extract_price(soup)
+            # Try JSON-LD data first (most reliable)
+            price = self._extract_price_from_json(soup, html)
+            
+            # Fallback to HTML extraction if JSON fails
+            if not price:
+                price = self._extract_price(soup)
             
             # Check stock
             in_stock = self._check_stock(soup)
@@ -63,6 +69,60 @@ class NeweggScraper(BaseScraper):
         except Exception as e:
             logger.error(f"Error scraping Newegg product {self.url}: {e}")
             return {"price": None, "in_stock": False, "currency": "USD", "image_url": None}
+    
+    def _extract_price_from_json(self, soup, html: str) -> float:
+        """Extract price from JSON-LD structured data (most reliable)"""
+        try:
+            # Look for JSON-LD script tags
+            json_scripts = soup.find_all('script', type='application/ld+json')
+            for script in json_scripts:
+                try:
+                    data = json.loads(script.string)
+                    
+                    # Handle single object or array
+                    if isinstance(data, list):
+                        data = data[0] if data else {}
+                    
+                    # Look for Product schema
+                    if data.get('@type') == 'Product':
+                        offers = data.get('offers', {})
+                        if isinstance(offers, dict):
+                            price_str = offers.get('price')
+                            if price_str:
+                                price = self.parse_price(str(price_str))
+                                if price:
+                                    logger.info(f"Found price in JSON-LD: ${price}")
+                                    return price
+                except (json.JSONDecodeError, AttributeError, KeyError) as e:
+                    continue
+            
+            # Try to find price in JavaScript variables
+            price_patterns = [
+                r'"price":\s*"?([0-9,]+\.?[0-9]*)"?',
+                r'product_price[\'"]?\s*:\s*[\'"]?([0-9,]+\.?[0-9]*)',
+                r'"selling_price":\s*([0-9,]+\.?[0-9]*)',
+            ]
+            
+            for pattern in price_patterns:
+                matches = re.findall(pattern, html)
+                if matches:
+                    # Get the highest price (likely the main product, not addon)
+                    prices = []
+                    for match in matches:
+                        price = self.parse_price(match)
+                        if price and price > 100:  # Filter out likely addon prices
+                            prices.append(price)
+                    
+                    if prices:
+                        # Sort and get highest (main product usually most expensive)
+                        prices.sort(reverse=True)
+                        logger.info(f"Found price in JavaScript: ${prices[0]} (from {len(prices)} candidates)")
+                        return prices[0]
+        
+        except Exception as e:
+            logger.warning(f"Error extracting price from JSON: {e}")
+        
+        return None
     
     def _extract_price(self, soup) -> float:
         """Extract price from Newegg page - prioritize main product price over ads"""
