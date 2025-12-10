@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     envDir: path.resolve(__dirname, '..'), // Look for .env in project root
     server: {
+      host: '0.0.0.0', // Listen on all network interfaces
       port: 3000,
       proxy: {
         '/api': {
