@@ -6,11 +6,22 @@ interface PriceChartProps {
 }
 
 export default function PriceChart({ data }: PriceChartProps) {
-  const chartData = data.map(item => ({
-    date: new Date(item.scraped_at).toLocaleDateString(),
-    price: item.price,
-    timestamp: new Date(item.scraped_at).getTime(),
-  }))
+  const chartData = data.map(item => {
+    const dateObj = new Date(item.scraped_at + 'Z') // Add Z to convert from UTC
+    return {
+      date: dateObj.toLocaleDateString(),
+      dateTime: dateObj.toLocaleString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true 
+      }),
+      price: item.price,
+      timestamp: dateObj.getTime(),
+    }
+  })
 
   if (chartData.length === 0) {
     return (
@@ -38,6 +49,11 @@ export default function PriceChart({ data }: PriceChartProps) {
           />
           <Tooltip 
             formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
+            labelFormatter={(label) => {
+              // Find the full dateTime for this label
+              const dataPoint = chartData.find(d => d.date === label)
+              return dataPoint?.dateTime || label
+            }}
             contentStyle={{
               backgroundColor: 'white',
               border: '1px solid #e5e7eb',
