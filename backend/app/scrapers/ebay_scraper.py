@@ -98,12 +98,20 @@ class EbayScraper(BaseScraper):
         availability_indicators = [
             soup.find('div', {'class': 'vi-overlayTitleBar'}),
             soup.find('span', string=lambda s: s and 'ended' in s.lower()),
-            soup.find('span', string=lambda s: s and 'sold' in s.lower()),
         ]
         
-        # If any "ended" or "sold out" indicator exists
+        # If any "ended" indicator exists
         if any(indicator for indicator in availability_indicators if indicator):
             return False
+        
+        # Check if it's an active auction (has bids or "Place bid" button)
+        auction_indicators = [
+            soup.find('span', string=re.compile(r'\d+\s*bid', re.I)),
+            soup.find('a', string=re.compile(r'Place bid', re.I)),
+            soup.find('button', string=re.compile(r'Place bid', re.I)),
+        ]
+        if any(indicator for indicator in auction_indicators if indicator):
+            return True  # Active auction is "in stock"
         
         # Check for quantity available
         quantity = soup.find('div', {'class': 'x-quantity__availability'})
