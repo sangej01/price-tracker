@@ -140,7 +140,7 @@ Click **"View Details"** on any product for:
 
 **Quick Setup:**
 ```bash
-# Edit config.py or create backend/.env
+# Edit .env at project root
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
 BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
@@ -229,25 +229,25 @@ python backend/test_scraper.py https://product-url
 
 ### Central Configuration (Recommended)
 
-All settings are in **`config.py`** at the root:
+All settings are in **`.env`** at the project root (auto-generated from `config.py`):
 
-```python
-# config.py
-class BackendConfig:
-    PORT = 8081                    # Change server port
-    SCRAPING_SERVICE = "brightdata"  # Enable Bright Data
-    BRIGHTDATA_API_KEY = "your_key"
-```
+**To change settings:**
+1. Edit `config.py` with your desired values
+2. Run `python apply_config.py` to regenerate `.env`
+3. For secrets (API keys), edit them directly in `.env` (don't commit!)
 
-**Apply changes:**
 ```bash
-python apply_config.py  # Generates .env files
+# .env (at project root)
+SERVER_PORT=8081
+SCRAPING_SERVICE=brightdata
+BRIGHTDATA_API_KEY=your_key
+BRIGHTDATA_PROXY_NAME=your_proxy_name
 ```
 
 **See:** [CONFIG_GUIDE.md](CONFIG_GUIDE.md) for full documentation
 
 ### Manual Configuration (Advanced)
-Edit `backend/.env` and `frontend/.env` directly (overwritten by `apply_config.py`)
+Edit `.env` at project root directly (will be overwritten by `apply_config.py`)
 
 ### Scan Frequency
 - **Per-product**: Set when creating/editing products (default: 60 minutes)

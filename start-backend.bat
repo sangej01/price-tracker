@@ -15,6 +15,6 @@ echo Installing/updating dependencies...
 pip install -r requirements.txt
 
 echo Starting FastAPI server...
-uvicorn app.main:app --reload
+python run.py
 
 

@@ -67,8 +67,6 @@ Once started, open your browser:
 | **Backend API** | http://localhost:8081 | REST API server |
 | **API Docs** | http://localhost:8081/docs | Interactive API documentation |
 
----
-
 ## 📝 First-Time Setup
 
 ### 1️⃣ Add a Vendor

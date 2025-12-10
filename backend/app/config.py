@@ -1,13 +1,16 @@
 """
 Application configuration from environment variables
-Loads from .env file or uses defaults from root config.py
+Loads from .env file at project root
 """
 import os
+from pathlib import Path
 from typing import Optional
 from dotenv import load_dotenv
 
-# Load .env file if it exists
-load_dotenv()
+# Load .env from project root (two directories up from this file)
+project_root = Path(__file__).parent.parent.parent
+env_path = project_root / ".env"
+load_dotenv(dotenv_path=env_path)
 
 
 class Settings:

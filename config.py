@@ -5,7 +5,7 @@ All user-configurable settings for the Price Tracker application.
 
 ⚠️ IMPORTANT: This file contains DEFAULTS only!
    - For non-sensitive settings: Edit values here, run `python apply_config.py`
-   - For API keys/secrets: Set directly in backend/.env file (never commit!)
+   - For API keys/secrets: Set directly in .env file at project root (never commit!)
    
 Safe to edit here:
   - PORT, HOST, SCAN_INTERVAL_MINUTES, timeouts, etc.
@@ -54,11 +54,11 @@ class BackendConfig:
     
     # Commercial Scraping Service (Optional)
     # Options: "direct", "brightdata"
-    # NOTE: These are just DEFAULTS. Set actual values in backend/.env file!
+    # NOTE: These are just DEFAULTS. Set actual values in .env file at project root!
     SCRAPING_SERVICE = "direct"   # Default to direct scraping
     
     # Bright Data Configuration
-    # ⚠️ DO NOT put real API keys here! Set them in backend/.env file:
+    # ⚠️ DO NOT put real API keys here! Set them in .env file at project root:
     #    BRIGHTDATA_API_KEY=your_actual_key
     #    BRIGHTDATA_PROXY_NAME=your_proxy_name
     BRIGHTDATA_API_KEY = ""       # Default (empty = not configured)
@@ -92,12 +92,22 @@ class FrontendConfig:
 backend = BackendConfig()
 frontend = FrontendConfig()
 
-# Generate .env files
+# Generate single .env file at project root
 def generate_env_files():
-    """Generate .env files for backend and frontend"""
+    """Generate single .env file at project root with all configuration"""
     
-    # Backend .env
-    backend_env = f"""# Backend Configuration (Auto-generated from config.py)
+    # Single .env file with all settings
+    env_content = f"""# Price Tracker Configuration (Auto-generated from config.py)
+# =============================================================================
+# This file is auto-generated. To change settings:
+# 1. Edit config.py with your desired values
+# 2. Run: python apply_config.py
+# 3. For secrets (API keys), edit them directly in this file (DON'T commit!)
+# =============================================================================
+
+# =============================================================================
+# BACKEND CONFIGURATION
+# =============================================================================
 SERVER_HOST={BackendConfig.HOST}
 SERVER_PORT={BackendConfig.PORT}
 DEBUG={str(BackendConfig.DEBUG).lower()}
@@ -109,25 +119,29 @@ SCRAPING_DELAY={BackendConfig.SCRAPING_DELAY}
 SCRAPING_TIMEOUT={BackendConfig.SCRAPING_TIMEOUT}
 
 SCRAPING_SERVICE={BackendConfig.SCRAPING_SERVICE}
+
+# Bright Data Credentials
+# ⚠️ IMPORTANT: Replace these with your actual credentials from Bright Data!
+# Don't commit real API keys to version control.
 BRIGHTDATA_API_KEY={BackendConfig.BRIGHTDATA_API_KEY}
 BRIGHTDATA_PROXY_NAME={BackendConfig.BRIGHTDATA_PROXY_NAME}
-"""
-    
-    # Frontend .env
-    frontend_env = f"""# Frontend Configuration (Auto-generated from config.py)
+
+# =============================================================================
+# FRONTEND CONFIGURATION
+# =============================================================================
 VITE_API_BASE_URL={FrontendConfig.API_BASE_URL}
 """
     
-    # Write files
-    with open("backend/.env", "w") as f:
-        f.write(backend_env)
-    print("✅ Generated backend/.env")
+    # Write single .env file at project root
+    with open(".env", "w", encoding="utf-8") as f:
+        f.write(env_content)
+    print("✅ Generated .env at project root")
     
-    with open("frontend/.env", "w") as f:
-        f.write(frontend_env)
-    print("✅ Generated frontend/.env")
-    
-    print("\n📝 Configuration applied! Restart servers to use new settings.")
+    print("\n📝 Configuration applied!")
+    print("   - All settings are in .env at project root")
+    print("   - Backend and frontend will both use this file")
+    print("   - Add your Bright Data credentials to .env if needed")
+    print("   - Restart servers to use new settings.")
 
 
 if __name__ == "__main__":

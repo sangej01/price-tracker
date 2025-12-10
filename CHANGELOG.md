@@ -4,6 +4,36 @@ All notable changes to the Price Tracker project.
 
 ---
 
+## [1.2.0] - 2025-12-10
+
+### 🎯 Single .env Configuration
+
+#### Simplified Configuration Structure
+- **Consolidated to single `.env` file** at project root
+- Both backend and frontend now read from the same `.env` file
+- Eliminates confusion from multiple configuration files
+- Clearer separation of defaults (in `config.py`) vs secrets (in `.env`)
+
+#### Configuration Updates
+- Updated `backend/app/config.py` to load `.env` from project root
+- Updated `frontend/vite.config.ts` to read from parent directory `.env`
+- Updated `config.py` to generate single `.env` file
+- Renamed `BRIGHTDATA_ZONE` → `BRIGHTDATA_PROXY_NAME` (more intuitive)
+- Clarified that API keys should NEVER be in `config.py`, only in `.env`
+
+#### Documentation Updates
+- Updated `CONFIG_GUIDE.md` with single `.env` structure
+- Updated `README.md` configuration section
+- All guides now reference single `.env` file location
+- Fixed UTF-8 encoding issue in `.env` generation
+
+### 🐛 Bug Fixes
+- Fixed backend startup issue (wrong directory for uvicorn command)
+- Fixed products not displaying (backend wasn't starting correctly)
+- Fixed environment variable loading in `run.py`
+
+---
+
 ## [1.1.0] - 2025-12-09
 
 ### 🎉 Major Features
@@ -104,4 +134,5 @@ All notable changes to the Price Tracker project.
 
 **Repository:** https://github.com/sangej01/price-tracker  
 **Documentation:** [README.md](README.md) | [QUICK_START.md](QUICK_START.md) | [CONFIG_GUIDE.md](CONFIG_GUIDE.md)
+
 

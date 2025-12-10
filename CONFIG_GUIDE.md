@@ -12,12 +12,12 @@ All application settings are centralized in **`config.py`** at the root level.
 Price Tracker/
 ├── config.py              ← EDIT THIS! (Central config)
 ├── apply_config.py        ← Run this after editing config.py
+├── .env                   ← Auto-generated (single file for everything!)
 ├── backend/
-│   ├── .env              ← Auto-generated (don't edit directly)
-│   └── .env.example      ← Template
+│   └── app/
+│       └── config.py      ← Reads from root .env
 └── frontend/
-    ├── .env              ← Auto-generated (don't edit directly)
-    └── .env.example      ← Template
+    └── vite.config.ts     ← Reads from root .env
 ```
 
 ---
@@ -44,7 +44,7 @@ class BackendConfig:
 python apply_config.py
 ```
 
-This generates `backend/.env` and `frontend/.env` from your `config.py` settings.
+This generates `.env` at the project root from your `config.py` settings.
 
 ### Step 3: Restart Servers
 
@@ -141,17 +141,17 @@ Shows current settings without applying them.
 
 ## 📋 Manual .env Editing (Advanced)
 
-If you prefer, edit `.env` files directly:
+If you prefer, edit `.env` file directly at project root:
 
-**backend/.env:**
+**`.env` (at project root):**
 ```env
+# Backend
 SERVER_PORT=8081
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_key
-```
+BRIGHTDATA_PROXY_NAME=residential_proxy1
 
-**frontend/.env:**
-```env
+# Frontend
 VITE_API_BASE_URL=http://localhost:8081
 ```
 
@@ -162,8 +162,8 @@ VITE_API_BASE_URL=http://localhost:8081
 ## 🔄 Configuration Priority
 
 1. **Environment variables** (highest priority)
-2. **`.env` files**
-3. **Defaults in `backend/app/config.py`**
+2. **`.env` file** (at project root)
+3. **Defaults in `config.py`**
 
 ---
 
@@ -179,7 +179,7 @@ VITE_API_BASE_URL=http://localhost:8081
 
 ## 🔒 Security
 
-- `.env` files are in `.gitignore` (won't be committed)
+- `.env` file is in `.gitignore` (won't be committed)
 - Never hardcode API keys in `config.py` if sharing publicly
 - Use environment variables for production:
 

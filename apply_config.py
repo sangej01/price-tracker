@@ -10,3 +10,4 @@ if __name__ == "__main__":
     print("🔧 Applying configuration from config.py...\n")
     generate_env_files()
 
+
