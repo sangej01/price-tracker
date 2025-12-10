@@ -37,7 +37,12 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React dev servers
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://geekom-gt1-a:3000",  # Local network hostname
+        "http://geekom-gt1-a.tail425a06.ts.net:3000",  # Tailscale hostname
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
