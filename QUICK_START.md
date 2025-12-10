@@ -6,7 +6,7 @@ Get your Price Tracker running in minutes!
 
 ## 🚀 Fastest Way (Windows)
 
-**Double-click `start-all.bat`** - Done! ✨
+**Double-click `user_tools\start-all.bat`** - Done! ✨
 
 This automatically:
 1. ✅ Creates Python virtual environment
@@ -15,8 +15,8 @@ This automatically:
 4. ✅ Starts both servers
 
 **To restart fresh:**
-1. Run `kill-all.bat` - Stops all Python and Node.js processes
-2. Run `start-all.bat` - Starts everything fresh
+1. Run `user_tools\kill-all.bat` - Stops all Python and Node.js processes
+2. Run `user_tools\start-all.bat` - Starts everything fresh
 
 ---
 
@@ -31,13 +31,13 @@ This automatically:
 **Start Backend:**
 ```powershell
 # Double-click or run:
-start-backend.bat
+user_tools\start-backend.bat
 ```
 
 **Start Frontend:**
 ```powershell
 # Double-click or run:
-start-frontend.bat
+user_tools\start-frontend.bat
 ```
 
 ### Option 2: Command Line
@@ -140,10 +140,10 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1
 **Quick restart:**
 ```bash
 # Stop all processes
-.\kill-all.bat
+user_tools\kill-all.bat
 
 # Start fresh
-.\start-all.bat
+user_tools\start-all.bat
 ```
 
 ### Port Already in Use

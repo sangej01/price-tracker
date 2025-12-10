@@ -65,18 +65,58 @@ class NeweggScraper(BaseScraper):
             return {"price": None, "in_stock": False, "currency": "USD", "image_url": None}
     
     def _extract_price(self, soup) -> float:
-        """Extract price from Newegg page"""
-        # Newegg often uses price-current class
-        price_element = soup.find('li', {'class': 'price-current'})
+        """Extract price from Newegg page - prioritize main product price over ads"""
         
-        if price_element:
-            # Newegg splits dollars and cents
+        # Strategy 1: Look for price in the main product info section (avoid sponsored ads)
+        # Newegg typically has product-buy-box or product-wrap for the actual product
+        product_section = soup.find('div', {'class': ['product-buy-box', 'product-wrap', 'product-pane']})
+        
+        if product_section:
+            # Look for price-current within the product section
+            price_element = product_section.find('li', {'class': 'price-current'})
+            if price_element:
+                price_text = ""
+                strong = price_element.find('strong')
+                if strong:
+                    price_text = strong.get_text(strip=True)
+                sup = price_element.find('sup')
+                if sup:
+                    price_text += sup.get_text(strip=True)
+                
+                if price_text:
+                    price = self.parse_price(price_text)
+                    if price:
+                        logger.info(f"Found price in product section: ${price}")
+                        return price
+        
+        # Strategy 2: Find ALL price-current elements, skip the first one (likely ad)
+        all_prices = soup.find_all('li', {'class': 'price-current'})
+        logger.info(f"Found {len(all_prices)} price elements total")
+        
+        # If we have multiple prices, the first is often a sponsored ad, try the second
+        if len(all_prices) > 1:
+            for idx, price_element in enumerate(all_prices[1:], 1):  # Skip first one
+                price_text = ""
+                strong = price_element.find('strong')
+                if strong:
+                    price_text = strong.get_text(strip=True)
+                sup = price_element.find('sup')
+                if sup:
+                    price_text += sup.get_text(strip=True)
+                
+                if price_text:
+                    price = self.parse_price(price_text)
+                    if price:
+                        logger.info(f"Found price at index {idx}: ${price}")
+                        return price
+        
+        # Strategy 3: Last resort - first price element (original behavior)
+        if len(all_prices) > 0:
+            price_element = all_prices[0]
             price_text = ""
-            
             strong = price_element.find('strong')
             if strong:
                 price_text = strong.get_text(strip=True)
-            
             sup = price_element.find('sup')
             if sup:
                 price_text += sup.get_text(strip=True)
@@ -84,6 +124,7 @@ class NeweggScraper(BaseScraper):
             if price_text:
                 price = self.parse_price(price_text)
                 if price:
+                    logger.warning(f"Using first price (may be ad): ${price}")
                     return price
         
         # Fallback to general price class
@@ -91,6 +132,7 @@ class NeweggScraper(BaseScraper):
         if price_element:
             return self.parse_price(price_element.get_text(strip=True))
         
+        logger.warning("No price found on Newegg page")
         return None
     
     def _check_stock(self, soup) -> bool:

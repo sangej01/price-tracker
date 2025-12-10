@@ -36,11 +36,12 @@ A full-stack web application that monitors product prices, tracks historical dat
 ### Quick Setup (Windows)
 ```powershell
 # Run everything with one command
-start-all.bat
+cd user_tools
+.\start-all.bat
 
 # To restart fresh:
-kill-all.bat   # Stop all processes
-start-all.bat  # Start clean
+.\kill-all.bat   # Stop all processes
+.\start-all.bat  # Start clean
 ```
 
 ### Manual Setup
@@ -169,7 +170,9 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 
 ## 🛠️ Development
 
-### Available Scripts (Windows)
+### Available User Tools
+
+All user tools are in the `user_tools/` folder:
 
 | Script | Purpose |
 |--------|---------|
@@ -177,9 +180,12 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 | `start-backend.bat` | Start backend only (port 8081) |
 | `start-frontend.bat` | Start frontend only (port 3000) |
 | `kill-all.bat` | Stop all Python and Node.js processes |
+| `apply_config.py` | Apply config.py changes to .env file |
+| `clean-data.bat` | Clean bad price data from database |
 
 **Typical workflow:**
 ```powershell
+cd user_tools
 .\kill-all.bat    # Stop everything
 .\start-all.bat   # Start fresh
 ```
@@ -252,7 +258,7 @@ All settings are in **`.env`** at the project root (auto-generated from `config.
 
 **To change settings:**
 1. Edit `config.py` with your desired values
-2. Run `python apply_config.py` to regenerate `.env`
+2. Run `python user_tools\apply_config.py` to regenerate `.env`
 3. For secrets (API keys), edit them directly in `.env` (don't commit!)
 
 ```bash
@@ -266,7 +272,7 @@ BRIGHTDATA_PROXY_NAME=your_proxy_name
 **See:** [CONFIG_GUIDE.md](CONFIG_GUIDE.md) for full documentation
 
 ### Manual Configuration (Advanced)
-Edit `.env` at project root directly (will be overwritten by `apply_config.py`)
+Edit `.env` at project root directly (will be overwritten by `user_tools\apply_config.py`)
 
 ### Scan Frequency
 - **Per-product**: Set when creating/editing products (default: 60 minutes)

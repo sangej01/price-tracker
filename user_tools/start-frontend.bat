@@ -1,5 +1,6 @@
 @echo off
 echo Starting Price Tracker Frontend...
+cd ..
 cd frontend
 
 echo Checking for node_modules...

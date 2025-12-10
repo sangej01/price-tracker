@@ -4,6 +4,37 @@ All notable changes to the Price Tracker project.
 
 ---
 
+## [1.2.2] - 2025-12-10
+
+### 📁 Better Organization
+
+#### New `user_tools/` Folder
+- **Organized all user-facing tools** into dedicated `user_tools/` folder
+- Clearer separation between app code and user utilities
+- Easier to find what you need!
+
+**What's in `user_tools/`:**
+- `start-all.bat` - Start both servers
+- `start-backend.bat` - Start backend only
+- `start-frontend.bat` - Start frontend only  
+- `kill-all.bat` - Stop all processes
+- `clean-data.bat` - Clean bad price data (with menu)
+- `apply_config.py` - Apply configuration changes
+- `README.md` - Complete user tools guide
+
+#### Scraper Improvements
+- **Added Brotli compression support** for Newegg
+- **Improved price detection** to skip sponsored ads
+- **Better logging** to show which price was found
+- Added `clean_price_data.py` utility to easily remove bad data
+
+### 📚 Documentation Updates
+- Updated all paths to reflect `user_tools/` structure
+- Added comprehensive file structure diagrams
+- Improved workflow instructions
+
+---
+
 ## [1.2.1] - 2025-12-10
 
 ### 🎨 UI Improvements

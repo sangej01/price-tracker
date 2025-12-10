@@ -27,7 +27,6 @@ echo ============================================
 echo  All processes stopped!
 echo ============================================
 echo.
-echo Ready to restart with: start-all.bat
+echo Ready to restart with: user_tools\start-all.bat
 echo.
 timeout /t 2 /nobreak >nul
-

@@ -11,7 +11,11 @@ All application settings are centralized in **`config.py`** at the root level.
 ```
 Price Tracker/
 ├── config.py              ← EDIT THIS! (Central config)
-├── apply_config.py        ← Run this after editing config.py
+├── user_tools/
+│   ├── apply_config.py   ← Run this after editing config.py
+│   ├── start-all.bat     ← Start everything
+│   ├── kill-all.bat      ← Stop everything
+│   └── clean_price_data.py ← Clean bad data
 ├── .env                   ← Auto-generated (single file for everything!)
 ├── backend/
 │   └── app/
@@ -41,6 +45,7 @@ class BackendConfig:
 ### Step 2: Apply Configuration
 
 ```bash
+cd user_tools
 python apply_config.py
 ```
 
@@ -50,7 +55,7 @@ This generates `.env` at the project root from your `config.py` settings.
 
 ```bash
 # Stop current servers (Ctrl+C), then:
-start-all.bat
+user_tools\start-all.bat
 ```
 
 ---
@@ -107,7 +112,7 @@ class BackendConfig:
     PORT = 9000  # ← Change this
 ```
 
-Run `python apply_config.py`, restart servers. Frontend automatically connects!
+Run `python user_tools\apply_config.py`, restart servers. Frontend automatically connects!
 
 ### Enable Bright Data
 
@@ -155,7 +160,7 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1
 VITE_API_BASE_URL=http://localhost:8081
 ```
 
-**Note:** Manual changes are overwritten when you run `apply_config.py`!
+**Note:** Manual changes are overwritten when you run `user_tools\apply_config.py`!
 
 ---
 
