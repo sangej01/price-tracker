@@ -19,19 +19,9 @@ class BaseScraper(ABC):
         """
         Fetch the HTML content of the page
         Smart fallback: Try direct (FREE) first, then Bright Data (paid) if blocked
-        Exception: eBay always uses Bright Data (too aggressive blocking)
         """
         try:
-            # eBay blocks too aggressively - skip direct scraping
-            if 'ebay.com' in self.url.lower() or 'ebay.co' in self.url.lower():
-                print(f"💰 eBay detected - using Bright Data directly (skipping free attempt)")
-                html = await ScrapingServiceClient.fetch_url(self.url)
-                if html:
-                    return html
-                print(f"❌ Bright Data failed for eBay: {self.url}")
-                return None
-            
-            # Try direct scraping first (FREE!) for other sites
+            # Try direct scraping first (FREE!)
             print(f"📡 Trying direct scraping for {self.url}")
             async with aiohttp.ClientSession() as session:
                 async with session.get(self.url, headers=self.headers, timeout=30) as response:
