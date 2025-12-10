@@ -117,7 +117,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Last Scanned */}
         {product.last_scanned_at && (
           <p className="text-xs text-gray-400 mt-3">
-            Last checked: {new Date(product.last_scanned_at).toLocaleString()}
+            Last checked: {new Date(product.last_scanned_at + 'Z').toLocaleString()}
           </p>
         )}
       </div>
