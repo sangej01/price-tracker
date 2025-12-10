@@ -3,6 +3,7 @@ import { ProductWithLatestPrice } from '../api/types'
 import { TrendingDown, TrendingUp, Minus, ExternalLink, Eye, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../api/client'
+import { formatCurrency } from '../utils/formatters'
 
 interface ProductCardProps {
   product: ProductWithLatestPrice
@@ -43,7 +44,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
         <div className="flex items-center text-red-600">
           <TrendingUp className="h-4 w-4 mr-1" />
           <span className="text-sm font-medium">
-            +${Math.abs(product.price_change).toFixed(2)} ({product.price_change_percent?.toFixed(1)}%)
+            +{formatCurrency(Math.abs(product.price_change), product.currency).substring(1)} ({product.price_change_percent?.toFixed(1)}%)
           </span>
         </div>
       )
@@ -53,7 +54,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
       <div className="flex items-center text-green-600">
         <TrendingDown className="h-4 w-4 mr-1" />
         <span className="text-sm font-medium">
-          -${Math.abs(product.price_change).toFixed(2)} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
+          -{formatCurrency(Math.abs(product.price_change), product.currency).substring(1)} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
         </span>
       </div>
     )
@@ -106,14 +107,13 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
               <div className="flex items-baseline mb-2">
                 <span className="text-3xl font-bold text-gray-900">
                   {product.is_auction && <span className="text-sm text-gray-500 mr-1">Current:</span>}
-                  ${product.current_price.toFixed(2)}
+                  {formatCurrency(product.current_price, product.currency)}
                 </span>
-                <span className="ml-2 text-sm text-gray-500">{product.currency}</span>
               </div>
               {/* Buy It Now Price for Auctions */}
               {product.is_auction && product.buy_it_now_price && (
                 <div className="text-sm text-blue-600 font-medium mb-1">
-                  Buy It Now: ${product.buy_it_now_price.toFixed(2)}
+                  Buy It Now: {formatCurrency(product.buy_it_now_price, product.currency)}
                 </div>
               )}
               {getPriceChangeIndicator()}
