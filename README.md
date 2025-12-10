@@ -37,6 +37,10 @@ A full-stack web application that monitors product prices, tracks historical dat
 ```powershell
 # Run everything with one command
 start-all.bat
+
+# To restart fresh:
+kill-all.bat   # Stop all processes
+start-all.bat  # Start clean
 ```
 
 ### Manual Setup
@@ -164,6 +168,21 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 ---
 
 ## 🛠️ Development
+
+### Available Scripts (Windows)
+
+| Script | Purpose |
+|--------|---------|
+| `start-all.bat` | Start both backend and frontend servers |
+| `start-backend.bat` | Start backend only (port 8081) |
+| `start-frontend.bat` | Start frontend only (port 3000) |
+| `kill-all.bat` | Stop all Python and Node.js processes |
+
+**Typical workflow:**
+```powershell
+.\kill-all.bat    # Stop everything
+.\start-all.bat   # Start fresh
+```
 
 ### Project Structure
 ```

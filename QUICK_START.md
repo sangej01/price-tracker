@@ -14,6 +14,10 @@ This automatically:
 3. ✅ Installs frontend dependencies
 4. ✅ Starts both servers
 
+**To restart fresh:**
+1. Run `kill-all.bat` - Stops all Python and Node.js processes
+2. Run `start-all.bat` - Starts everything fresh
+
 ---
 
 ## 🛠️ Manual Setup
@@ -130,6 +134,17 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1
 ---
 
 ## 🐛 Troubleshooting
+
+### Need to Restart Servers
+
+**Quick restart:**
+```bash
+# Stop all processes
+.\kill-all.bat
+
+# Start fresh
+.\start-all.bat
+```
 
 ### Port Already in Use
 

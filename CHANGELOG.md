@@ -4,6 +4,26 @@ All notable changes to the Price Tracker project.
 
 ---
 
+## [1.2.1] - 2025-12-10
+
+### 🎨 UI Improvements
+
+#### Price Chart Enhancement
+- **Charts now start from $0** on Y-axis for better price perspective
+- Provides accurate visual representation of actual price values
+
+#### Process Management
+- **Added `kill-all.bat`** - Convenient script to stop all Python and Node.js processes
+- Simplifies server restart workflow
+- Updated documentation with process management instructions
+
+### 📚 Documentation Updates
+- Added batch scripts reference table to README
+- Updated QUICK_START.md with restart instructions
+- Added troubleshooting section for server restarts
+
+---
+
 ## [1.2.0] - 2025-12-10
 
 ### 🎯 Single .env Configuration
