@@ -6,7 +6,7 @@ Get your Price Tracker running in minutes!
 
 ## 🚀 Fastest Way (Windows)
 
-**Double-click `user_tools\start-all.bat`** - Done! ✨
+**Double-click `user_tools\start-all.bat`** in File Explorer- Done! ✨
 
 This automatically:
 1. ✅ Creates Python virtual environment

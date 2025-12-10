@@ -7,9 +7,9 @@ router = APIRouter(prefix="/api/scanner", tags=["scanner"])
 
 
 @router.post("/scan-all")
-async def trigger_scan_all(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    """Manually trigger a scan of all due products"""
-    result = await PriceScannerService.scan_all_due_products(db)
+async def trigger_scan_all(force: bool = False, db: Session = Depends(get_db)):
+    """Manually trigger a scan of all due products (or all if force=True)"""
+    result = await PriceScannerService.scan_all_due_products(db, force=force)
     return {
         "message": "Scan completed",
         "results": result

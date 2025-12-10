@@ -51,27 +51,32 @@ class PriceScannerService:
             return False
 
     @staticmethod
-    async def scan_all_due_products(db: Session) -> dict:
+    async def scan_all_due_products(db: Session, force: bool = False) -> dict:
         """
-        Scan all products that are due for scanning
+        Scan all products that are due for scanning (or all if force=True)
         Returns dict with success/failure counts
         """
         now = datetime.utcnow()
         
-        # Get all active products that need scanning
+        # Get all active products
         products = db.query(Product).filter(
             Product.is_active == True
         ).all()
 
-        due_products = []
-        for product in products:
-            if product.last_scanned_at is None:
-                due_products.append(product)
-            else:
-                time_since_scan = now - product.last_scanned_at
-                scan_interval = timedelta(minutes=product.scan_frequency_minutes)
-                if time_since_scan >= scan_interval:
+        if force:
+            # Force scan all products regardless of schedule
+            due_products = products
+        else:
+            # Only scan products that are due
+            due_products = []
+            for product in products:
+                if product.last_scanned_at is None:
                     due_products.append(product)
+                else:
+                    time_since_scan = now - product.last_scanned_at
+                    scan_interval = timedelta(minutes=product.scan_frequency_minutes)
+                    if time_since_scan >= scan_interval:
+                        due_products.append(product)
 
         if not due_products:
             return {"total": 0, "success": 0, "failed": 0}

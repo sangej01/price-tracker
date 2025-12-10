@@ -37,7 +37,7 @@ export const dashboardService = {
 
 // Scanner API
 export const scannerService = {
-  scanAll: () => api.post('/api/scanner/scan-all'),
+  scanAll: (force = true) => api.post('/api/scanner/scan-all', null, { params: { force } }),
   getStatus: () => api.get('/api/scanner/status'),
 }
 

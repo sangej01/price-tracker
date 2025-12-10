@@ -86,7 +86,7 @@ Price Tracker/
 ## 🚀 How to Run
 
 ### Super Easy Way
-Double-click `start-all.bat` - Done! 🎉
+Double-click `start-all.bat` in File Explorer - Done! 🎉
 
 ### Manual Way
 1. Backend: `cd backend && uvicorn app.main:app --reload`
