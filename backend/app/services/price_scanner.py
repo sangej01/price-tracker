@@ -26,7 +26,10 @@ class PriceScannerService:
                     price=result['price'],
                     currency=result.get('currency', 'USD'),
                     in_stock=result.get('in_stock', True),
-                    scraped_at=datetime.utcnow()
+                    scraped_at=datetime.utcnow(),
+                    # Auction data (if present)
+                    bid_count=result.get('bid_count'),
+                    is_auction_active=result.get('is_auction', False),
                 )
                 db.add(price_history)
                 
@@ -36,6 +39,14 @@ class PriceScannerService:
                 # Update image URL if we got one
                 if result.get('image_url'):
                     product.image_url = result['image_url']
+                
+                # Update auction fields (if it's an auction)
+                if result.get('is_auction'):
+                    product.is_auction = True
+                    product.current_bid_count = result.get('bid_count')
+                    product.buy_it_now_price = result.get('buy_it_now_price')
+                    if result.get('auction_end_time'):
+                        product.auction_end_time = result.get('auction_end_time')
                 
                 db.commit()
                 

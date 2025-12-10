@@ -116,6 +116,31 @@ export default function Settings() {
         </div>
       )}
 
+      {/* eBay Auction Tracking */}
+      <div className="bg-white shadow-sm rounded-lg border border-blue-200 p-6 bg-blue-50">
+        <div className="flex items-start">
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">🔨 eBay Auction Tracking</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Track live eBay auctions with bid count and time remaining. Requires more frequent scanning (recommended: 5-15 minutes).
+            </p>
+            <div className="bg-white rounded-lg p-4 border border-blue-200">
+              <h3 className="font-medium text-gray-900 mb-2">How It Works:</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>✓ Detects auction vs Buy It Now listings automatically</li>
+                <li>✓ Tracks current bid amount and number of bidders</li>
+                <li>✓ Shows time remaining until auction ends</li>
+                <li>✓ Displays both auction bid and Buy It Now price (if both available)</li>
+                <li>✓ Chart shows bid progression over time</li>
+              </ul>
+              <p className="mt-3 text-xs text-blue-700">
+                💡 <strong>Tip:</strong> Set eBay scan frequency to 15 minutes below for best auction monitoring
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Global Default */}
       <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Global Default</h2>

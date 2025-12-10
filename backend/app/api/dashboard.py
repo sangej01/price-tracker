@@ -50,7 +50,13 @@ def get_dashboard_products(db: Session = Depends(get_db)):
             price_change_percent=price_change_percent,
             in_stock=latest_price.in_stock if latest_price else False,
             last_scanned_at=product.last_scanned_at,
-            currency=latest_price.currency if latest_price else "USD"
+            currency=latest_price.currency if latest_price else "USD",
+            scan_frequency_minutes=product.scan_frequency_minutes,
+            # Auction fields
+            is_auction=product.is_auction if hasattr(product, 'is_auction') else False,
+            auction_end_time=product.auction_end_time if hasattr(product, 'auction_end_time') else None,
+            current_bid_count=product.current_bid_count if hasattr(product, 'current_bid_count') else None,
+            buy_it_now_price=product.buy_it_now_price if hasattr(product, 'buy_it_now_price') else None,
         ))
     
     return result

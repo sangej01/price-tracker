@@ -1,11 +1,13 @@
 """
-eBay-specific scraper
+eBay-specific scraper with auction support
 """
 from .base_scraper import BaseScraper
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from bs4 import BeautifulSoup
 import logging
 import asyncio
+import re
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -49,13 +51,17 @@ class EbayScraper(BaseScraper):
             # Detect currency
             currency = self._detect_currency(soup)
             
-            logger.info(f"eBay scrape successful: ${price}, in_stock={in_stock}, image={bool(image_url)}")
+            # Extract auction data (if it's an auction)
+            auction_data = self._extract_auction_data(soup)
+            
+            logger.info(f"eBay scrape successful: ${price}, in_stock={in_stock}, image={bool(image_url)}, auction={auction_data['is_auction']}")
             
             return {
                 "price": price,
                 "in_stock": in_stock,
                 "currency": currency,
-                "image_url": image_url
+                "image_url": image_url,
+                **auction_data  # Include auction fields
             }
             
         except Exception as e:
@@ -131,6 +137,73 @@ class EbayScraper(BaseScraper):
         
         # Default to USD
         return 'USD'
+    
+    def _extract_auction_data(self, soup) -> Dict[str, Any]:
+        """Extract auction-specific data if this is an auction listing"""
+        auction_data = {
+            "is_auction": False,
+            "bid_count": None,
+            "auction_end_time": None,
+            "buy_it_now_price": None,
+        }
+        
+        try:
+            # Check if this is an auction (not just Buy It Now)
+            # Look for bid count indicators
+            bid_count_selectors = [
+                soup.find('span', {'class': 'vi-qtyS-hot-red'}),  # Hot auction
+                soup.find('a', {'class': 'vi-txt-underline'}),    # Bid link
+                soup.find('span', string=re.compile(r'\d+\s*bid', re.I)),
+            ]
+            
+            for element in bid_count_selectors:
+                if element:
+                    text = element.get_text()
+                    # Extract number of bids
+                    bid_match = re.search(r'(\d+)\s*bid', text, re.I)
+                    if bid_match:
+                        auction_data["is_auction"] = True
+                        auction_data["bid_count"] = int(bid_match.group(1))
+                        break
+            
+            # If it's an auction, try to get end time
+            if auction_data["is_auction"]:
+                # Look for timer or end time
+                time_selectors = [
+                    soup.find('span', {'class': 'timeMs'}),
+                    soup.find('span', {'id': 'bb_tlft'}),
+                ]
+                
+                for element in time_selectors:
+                    if element:
+                        time_text = element.get_text()
+                        # Try to parse relative time (e.g., "2d 5h" or "3h 45m")
+                        # For now, just note that it has an end time
+                        auction_data["auction_end_time"] = time_text
+                        break
+            
+            # Check for Buy It Now price (some auctions have both bid and BIN)
+            bin_selectors = [
+                soup.find('div', {'class': 'vi-buybox-binPrice'}),
+                soup.find('span', string=re.compile(r'Buy It Now', re.I)),
+            ]
+            
+            for element in bin_selectors:
+                if element:
+                    # Look for price near "Buy It Now"
+                    parent = element.parent
+                    if parent:
+                        price_elem = parent.find('span', {'class': 'notranslate'})
+                        if price_elem:
+                            bin_price = self.parse_price(price_elem.get_text())
+                            if bin_price:
+                                auction_data["buy_it_now_price"] = bin_price
+                                break
+        
+        except Exception as e:
+            logger.warning(f"Error extracting auction data: {e}")
+        
+        return auction_data
     
     def _extract_image(self, soup) -> str:
         """Extract product image URL from eBay page"""

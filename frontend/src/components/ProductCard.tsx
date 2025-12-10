@@ -90,12 +90,32 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
         <div className="mb-4">
           {product.current_price ? (
             <>
+              {/* Auction Badge */}
+              {product.is_auction && (
+                <div className="flex items-center mb-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                    🔨 Auction
+                  </span>
+                  {product.current_bid_count !== null && product.current_bid_count !== undefined && (
+                    <span className="ml-2 text-xs text-gray-600">
+                      {product.current_bid_count} {product.current_bid_count === 1 ? 'bid' : 'bids'}
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="flex items-baseline mb-2">
                 <span className="text-3xl font-bold text-gray-900">
+                  {product.is_auction && <span className="text-sm text-gray-500 mr-1">Current:</span>}
                   ${product.current_price.toFixed(2)}
                 </span>
                 <span className="ml-2 text-sm text-gray-500">{product.currency}</span>
               </div>
+              {/* Buy It Now Price for Auctions */}
+              {product.is_auction && product.buy_it_now_price && (
+                <div className="text-sm text-blue-600 font-medium mb-1">
+                  Buy It Now: ${product.buy_it_now_price.toFixed(2)}
+                </div>
+              )}
               {getPriceChangeIndicator()}
             </>
           ) : (
