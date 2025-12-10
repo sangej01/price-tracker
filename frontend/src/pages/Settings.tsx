@@ -172,7 +172,7 @@ export default function Settings() {
                     onClick={() => handleApplyToProducts(vendor.id)}
                     disabled={applyingToProducts}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
-                    title="Apply this frequency to all products from this vendor"
+                    title={`Apply this frequency to all EXISTING ${vendor.name} products`}
                   >
                     <RefreshCw className={`h-4 w-4 ${applyingToProducts ? 'animate-spin' : ''}`} />
                   </button>
@@ -188,7 +188,7 @@ export default function Settings() {
         <div>
           <h3 className="font-medium text-gray-900">Apply Changes</h3>
           <p className="text-sm text-gray-500 mt-1">
-            Save settings and optionally apply to existing products
+            Save settings for NEW products, and optionally update EXISTING products
           </p>
         </div>
         <div className="flex space-x-3">
@@ -204,9 +204,10 @@ export default function Settings() {
             onClick={() => handleApplyToProducts()}
             disabled={applyingToProducts}
             className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+            title="Update all existing products to use the settings above"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${applyingToProducts ? 'animate-spin' : ''}`} />
-            Apply to All Products
+            Apply to All Existing Products
           </button>
         </div>
       </div>
