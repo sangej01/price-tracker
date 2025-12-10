@@ -13,6 +13,10 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0', // Listen on all network interfaces
       port: 3000,
+      allowedHosts: [
+        '.tail425a06.ts.net', // Allow Tailscale network
+        'localhost',
+      ],
       proxy: {
         '/api': {
           target: `http://localhost:${backendPort}`,
