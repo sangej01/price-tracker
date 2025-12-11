@@ -17,8 +17,15 @@ def reset_ebay_product():
     db = SessionLocal()
     
     try:
-        # Find the product
-        product = db.query(Product).filter(Product.url == EBAY_URL).first()
+        # Find the product - use LIKE to match URL with or without query params
+        # Extract item ID from URL (e.g., 366042770374 from /itm/366042770374)
+        import re
+        item_id_match = re.search(r'/itm/(\d+)', EBAY_URL)
+        if item_id_match:
+            item_id = item_id_match.group(1)
+            product = db.query(Product).filter(Product.url.like(f'%/itm/{item_id}%')).first()
+        else:
+            product = db.query(Product).filter(Product.url == EBAY_URL).first()
         
         if product:
             print(f"\n🗑️  Found existing product: {product.name}")
