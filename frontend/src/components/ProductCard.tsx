@@ -102,6 +102,17 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
                       {product.current_bid_count} {product.current_bid_count === 1 ? 'bid' : 'bids'}
                     </span>
                   )}
+                  {product.auction_end_time && (
+                    <span className="ml-2 text-xs text-red-600 font-medium">
+                      Ends: {new Date(product.auction_end_time + 'Z').toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true 
+                      })}
+                    </span>
+                  )}
                 </div>
               )}
               <div className="flex items-baseline mb-2">
