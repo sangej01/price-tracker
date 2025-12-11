@@ -107,6 +107,14 @@ export default function Products() {
     return vendor?.name || 'Unknown'
   }
 
+  const formatScanFrequency = (minutes: number) => {
+    if (minutes >= 60) {
+      const hours = minutes / 60
+      return hours === 1 ? '1 hour' : `${hours} hours`
+    }
+    return `${minutes} min`
+  }
+
   // Filter and sort products
   const filteredAndSortedProducts = () => {
     let filtered = [...products]
@@ -342,7 +350,7 @@ export default function Products() {
                   </a>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {product.scan_frequency_minutes} min
+                  {formatScanFrequency(product.scan_frequency_minutes)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {product.is_active ? (
