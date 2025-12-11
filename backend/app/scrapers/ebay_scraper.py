@@ -94,8 +94,6 @@ class EbayScraper(BaseScraper):
     
     def _check_stock(self, soup, is_auction: bool = False) -> bool:
         """Check eBay availability"""
-        print(f"DEBUG _check_stock: is_auction={is_auction}")
-        
         # Check for specific "auction/listing ended" indicators (not just any "ended" text)
         ended_indicators = [
             soup.find('div', {'class': 'vi-overlayTitleBar'}),
@@ -105,12 +103,10 @@ class EbayScraper(BaseScraper):
         
         # If any "ended" indicator exists
         if any(indicator for indicator in ended_indicators if indicator):
-            print(f"DEBUG _check_stock: Found 'auction/listing ended' indicator, returning False")
             return False
         
         # If it's an auction, it's "in stock" by default (unless ended above)
         if is_auction:
-            print(f"DEBUG _check_stock: Active auction, returning True")
             return True
         
         # Check if it's an active auction (has bids or "Place bid" button)
