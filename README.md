@@ -14,10 +14,11 @@ A full-stack web application that monitors product prices, tracks historical dat
 ## ✨ Key Features
 
 - 🔍 **Smart Web Scraping** - Vendor-specific scrapers (Amazon, eBay, Newegg) with fallback support
+- 🔨 **eBay Auction Tracking** - Monitor live auctions with bid count and time remaining
 - 🌐 **Commercial Scraping Integration** - Optional Bright Data for protected sites
 - 📊 **Real-time Price Tracking** - Monitor prices with visual change indicators
 - 📈 **Interactive Charts** - Historical price trends with Recharts
-- 🔄 **Automated Scheduling** - Configurable scan frequencies per product
+- 🔄 **Automated Scheduling** - Configurable scan frequencies per product/vendor
 - 💼 **Multi-Vendor Support** - Track products across different websites
 - 📱 **Modern UI** - Responsive design with Tailwind CSS
 - 📦 **Stock Status Monitoring** - Track product availability
@@ -30,8 +31,9 @@ A full-stack web application that monitors product prices, tracks historical dat
 **See [QUICK_START.md](QUICK_START.md) for detailed setup instructions**
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.11+
 - Node.js 18+
+- pipenv (install: `pip install pipenv`)
 
 ### Quick Setup (Windows)
 ```powershell
@@ -48,10 +50,8 @@ cd user_tools
 ```bash
 # Backend
 cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+pipenv install           # Install dependencies
+pipenv run python run.py # Start server
 
 # Frontend (new terminal)
 cd frontend
@@ -157,6 +157,7 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 
 ### For Users
 - **[QUICK_START.md](QUICK_START.md)** - Setup and installation
+- **[FEATURES.md](FEATURES.md)** - Latest features and improvements ✨ NEW
 - **[NETWORK_ACCESS.md](NETWORK_ACCESS.md)** - Access from other devices / Tailscale
 - **[documentation/QUICK_USER_GUIDE.md](documentation/QUICK_USER_GUIDE.md)** - How to use the app
 - **[documentation/DEMO_SUMMARY.md](documentation/DEMO_SUMMARY.md)** - Visual walkthrough
@@ -165,6 +166,7 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 - **[documentation/PROJECT_OVERVIEW.md](documentation/PROJECT_OVERVIEW.md)** - Architecture details
 - **[documentation/CUSTOM_SCRAPERS_GUIDE.md](documentation/CUSTOM_SCRAPERS_GUIDE.md)** - Add vendor scrapers
 - **[documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)** - Commercial APIs setup
+- **[.cursor/rules/dev-preferences.mdc](.cursor/rules/dev-preferences.mdc)** - Developer preferences
 - **[documentation/README.md](documentation/README.md)** - Full documentation index
 
 ---
@@ -277,6 +279,8 @@ Edit `.env` at project root directly (will be overwritten by `user_tools\apply_c
 
 ### Scan Frequency
 - **Per-product**: Set when creating/editing products (default: 60 minutes)
+- **Per-vendor**: Set default frequency for all products from a vendor
+- **Settings page**: Manage all scan frequencies in one place
 - **Global check**: Scheduler runs every 15 minutes to find due products
 
 ---
@@ -307,8 +311,10 @@ python -m app.main
 
 ## 🚧 Future Enhancements
 
+- [x] **eBay Auction Tracking** ✅ (Completed Dec 2025)
+- [x] **Multi-currency Support** ✅ (Completed Dec 2025)
+- [x] **Per-vendor Scan Frequencies** ✅ (Completed Dec 2025)
 - [ ] Email/SMS price drop alerts
-- [ ] Multi-currency support
 - [ ] Export to CSV/Excel
 - [ ] Mobile app (React Native)
 - [ ] Browser extension

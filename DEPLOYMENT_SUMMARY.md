@@ -1,7 +1,13 @@
 # 🚀 Deployment Summary
 
-**Date:** December 9, 2025  
-**Status:** ✅ Ready for GitHub Push
+**Last Updated:** December 11, 2025  
+**Status:** ✅ Production Ready
+
+**Major Updates Since Initial Release:**
+- ✅ eBay Auction Tracking (Dec 11, 2025)
+- ✅ Multi-Currency Support (Dec 11, 2025)
+- ✅ Per-Vendor Scan Frequencies (Dec 11, 2025)
+- ✅ Migrated to Pipenv (Dec 11, 2025)
 
 ---
 
@@ -22,9 +28,11 @@
 - ✅ Updated troubleshooting guides with working solutions
 
 ### 3. Updated Main Documentation
-- ✅ **README.md** - Clean, modern overview with badges and quick links
-- ✅ **QUICK_START.md** - Streamlined setup guide with troubleshooting
+- ✅ **README.md** - Clean, modern overview with badges and quick links (updated Dec 11)
+- ✅ **QUICK_START.md** - Streamlined setup guide with pipenv instructions (updated Dec 11)
+- ✅ **FEATURES.md** - NEW: Comprehensive feature highlights (added Dec 11)
 - ✅ **documentation/README.md** - Complete documentation index
+- ✅ **.cursor/rules/dev-preferences.mdc** - NEW: Developer workflow preferences (added Dec 11)
 
 ### 4. Git Repository
 - ✅ Initialized git repository
