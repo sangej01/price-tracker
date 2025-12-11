@@ -18,6 +18,7 @@ export default function Products() {
     image_url: '',
     description: '',
     scan_frequency_minutes: 60,
+    is_active: true,
   })
 
   const fetchData = async () => {
@@ -66,6 +67,7 @@ export default function Products() {
       image_url: product.image_url || '',
       description: product.description || '',
       scan_frequency_minutes: product.scan_frequency_minutes,
+      is_active: product.is_active,
     })
     setShowModal(true)
   }
@@ -89,6 +91,7 @@ export default function Products() {
       image_url: '',
       description: '',
       scan_frequency_minutes: 60,
+      is_active: true,
     })
   }
 
@@ -291,6 +294,17 @@ export default function Products() {
                     </div>
 
                     <div>
+                      <label className="block text-sm font-medium text-gray-700">Description (optional)</label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        rows={3}
+                        placeholder="Add notes or description..."
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      />
+                    </div>
+
+                    <div>
                       <label className="block text-sm font-medium text-gray-700">Scan Frequency (minutes)</label>
                       <input
                         type="number"
@@ -300,6 +314,18 @@ export default function Products() {
                         onChange={(e) => setFormData({ ...formData, scan_frequency_minutes: parseInt(e.target.value) })}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                       />
+                    </div>
+
+                    <div>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={formData.is_active}
+                          onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        />
+                        <span className="ml-2 text-sm font-medium text-gray-700">Active (enable scanning)</span>
+                      </label>
                     </div>
                   </div>
                 </div>
