@@ -181,19 +181,21 @@ class EbayScraper(BaseScraper):
             
             # If it's an auction, try to get end time
             if auction_data["is_auction"]:
-                # Look for timer or end time
+                # Look for timer or end time text
                 time_selectors = [
                     soup.find('span', {'class': 'timeMs'}),
                     soup.find('span', {'id': 'bb_tlft'}),
+                    soup.find('span', {'class': 'vi-tm-left'}),
                 ]
                 
                 for element in time_selectors:
                     if element:
                         time_text = element.get_text()
-                        # Try to parse relative time (e.g., "2d 5h" or "3h 45m")
-                        # For now, just note that it has an end time
-                        auction_data["auction_end_time"] = time_text
-                        break
+                        # Try to parse relative time and calculate end datetime
+                        end_datetime = self._parse_time_remaining(time_text)
+                        if end_datetime:
+                            auction_data["auction_end_time"] = end_datetime
+                            break
             
             # Check for Buy It Now price (some auctions have both bid and BIN)
             bin_selectors = [
@@ -217,6 +219,42 @@ class EbayScraper(BaseScraper):
             logger.warning(f"Error extracting auction data: {e}")
         
         return auction_data
+    
+    def _parse_time_remaining(self, time_text: str) -> Optional[datetime]:
+        """Parse time remaining text (e.g., '2d 5h' or '3h 45m') into end datetime"""
+        try:
+            from datetime import datetime, timedelta
+            
+            # Extract days, hours, minutes, seconds
+            days = hours = minutes = seconds = 0
+            
+            day_match = re.search(r'(\d+)d', time_text, re.I)
+            if day_match:
+                days = int(day_match.group(1))
+            
+            hour_match = re.search(r'(\d+)h', time_text, re.I)
+            if hour_match:
+                hours = int(hour_match.group(1))
+            
+            minute_match = re.search(r'(\d+)m', time_text, re.I)
+            if minute_match:
+                minutes = int(minute_match.group(1))
+            
+            second_match = re.search(r'(\d+)s', time_text, re.I)
+            if second_match:
+                seconds = int(second_match.group(1))
+            
+            # Calculate end time from now
+            if days or hours or minutes or seconds:
+                time_remaining = timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+                end_time = datetime.utcnow() + time_remaining
+                return end_time
+            
+            return None
+            
+        except Exception as e:
+            logger.warning(f"Error parsing time remaining '{time_text}': {e}")
+            return None
     
     def _extract_image(self, soup) -> str:
         """Extract product image URL from eBay page"""
