@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, TrendingDown, TrendingUp, RefreshCw, Cpu, Edit2, Save, X, Trash2 } from 'lucide-react'
-import { dashboardService, productService } from '../api/services'
+import { dashboardService, productService, vendorService } from '../api/services'
 import { ProductPriceStats } from '../api/types'
 import PriceChart from '../components/PriceChart'
 
@@ -17,26 +17,37 @@ export default function ProductDetail() {
   // Editing state
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState('')
+  const [editUrl, setEditUrl] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editImageUrl, setEditImageUrl] = useState('')
+  const [editVendorId, setEditVendorId] = useState<number>(0)
   const [editFrequency, setEditFrequency] = useState(60)
   const [editActive, setEditActive] = useState(true)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [vendors, setVendors] = useState<any[]>([])
 
   const fetchStats = async () => {
     if (!id) return
     try {
       setLoading(true)
-      const [statsRes, scraperRes, productRes] = await Promise.all([
+      const [statsRes, scraperRes, productRes, vendorsRes] = await Promise.all([
         dashboardService.getProductStats(parseInt(id), days),
         productService.getScraperInfo(parseInt(id)),
-        productService.getById(parseInt(id))
+        productService.getById(parseInt(id)),
+        vendorService.getAll()
       ])
       setStats(statsRes.data)
       setScraperInfo(scraperRes.data)
+      setVendors(vendorsRes.data)
       
       // Initialize edit fields with current values
       const product = productRes.data
       setEditName(product.name)
+      setEditUrl(product.url)
+      setEditDescription(product.description || '')
+      setEditImageUrl(product.image_url || '')
+      setEditVendorId(product.vendor_id)
       setEditFrequency(product.scan_frequency_minutes)
       setEditActive(product.is_active)
     } catch (error) {
@@ -52,6 +63,10 @@ export default function ProductDetail() {
       setSaving(true)
       await productService.update(parseInt(id), {
         name: editName,
+        url: editUrl,
+        description: editDescription || null,
+        image_url: editImageUrl || null,
+        vendor_id: editVendorId,
         scan_frequency_minutes: editFrequency,
         is_active: editActive,
       })
@@ -235,15 +250,47 @@ export default function ProductDetail() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Product URL
             </label>
-            <a
-              href={scraperInfo?.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-600 hover:text-primary-700 flex items-center gap-1 text-sm"
-            >
-              View on {scraperInfo?.vendor}
-              <ExternalLink className="h-4 w-4" />
-            </a>
+            {isEditing ? (
+              <input
+                type="url"
+                value={editUrl}
+                onChange={(e) => setEditUrl(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                placeholder="https://..."
+              />
+            ) : (
+              <a
+                href={scraperInfo?.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 hover:text-primary-700 flex items-center gap-1 text-sm break-all"
+              >
+                View on {scraperInfo?.vendor}
+                <ExternalLink className="h-4 w-4 flex-shrink-0" />
+              </a>
+            )}
+          </div>
+
+          {/* Vendor */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Vendor
+            </label>
+            {isEditing ? (
+              <select
+                value={editVendorId}
+                onChange={(e) => setEditVendorId(parseInt(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                {vendors.map((vendor) => (
+                  <option key={vendor.id} value={vendor.id}>
+                    {vendor.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <p className="text-gray-900">{scraperInfo?.vendor}</p>
+            )}
           </div>
 
           {/* Scan Frequency */}
@@ -304,6 +351,42 @@ export default function ProductDetail() {
               >
                 {editActive ? 'Active' : 'Inactive'}
               </span>
+            )}
+          </div>
+
+          {/* Image URL */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Image URL
+            </label>
+            {isEditing ? (
+              <input
+                type="url"
+                value={editImageUrl}
+                onChange={(e) => setEditImageUrl(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                placeholder="https://... (optional)"
+              />
+            ) : (
+              <p className="text-gray-600 text-sm truncate">{editImageUrl || 'Not set'}</p>
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            {isEditing ? (
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                placeholder="Optional description or notes..."
+              />
+            ) : (
+              <p className="text-gray-600 text-sm whitespace-pre-wrap">{editDescription || 'No description'}</p>
             )}
           </div>
         </div>
