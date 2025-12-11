@@ -17,15 +17,22 @@ class PriceScannerService:
         Returns True if successful, False otherwise
         """
         try:
-            # Determine if we need paid service (for auction end time on first scan)
+            # Determine if we need paid service
             use_paid_service = False
             if 'ebay.com' in product.url.lower():
-                # If it's an auction without end time, use paid service ONCE
-                if product.is_auction and not product.auction_end_time:
+                # For eBay: ALWAYS use Bright Data on first scan to get complete HTML
+                # This ensures we can detect if it's an auction and get all data
+                if not product.last_scanned_at:
                     use_paid_service = True
-                    print(f"💰 First auction scan - using Bright Data to get end time for {product.name}")
+                    print(f"💰 First eBay scan - using Bright Data for complete data: {product.name}")
+                # For subsequent scans of auctions: use Bright Data ONLY if missing end time
+                elif product.is_auction and not product.auction_end_time:
+                    use_paid_service = True
+                    print(f"💰 Auction missing end time - using Bright Data: {product.name}")
                 elif product.is_auction:
-                    print(f"✅ Auction end time already known - using FREE direct scraping for {product.name}")
+                    print(f"✅ Auction fully tracked - using FREE direct scraping: {product.name}")
+                else:
+                    print(f"✅ Regular eBay listing - using FREE direct scraping: {product.name}")
             
             # Scrape the product page
             result = await ScraperFactory.scrape_url(product.url, use_paid_service=use_paid_service)
