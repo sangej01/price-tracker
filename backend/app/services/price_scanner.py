@@ -13,11 +13,22 @@ class PriceScannerService:
     async def scan_product(product: Product, db: Session) -> bool:
         """
         Scan a single product and save price history
+        Smart cost optimization: Use paid service ONLY for first auction scan to get end time
         Returns True if successful, False otherwise
         """
         try:
+            # Determine if we need paid service (for auction end time on first scan)
+            use_paid_service = False
+            if 'ebay.com' in product.url.lower():
+                # If it's an auction without end time, use paid service ONCE
+                if product.is_auction and not product.auction_end_time:
+                    use_paid_service = True
+                    print(f"💰 First auction scan - using Bright Data to get end time for {product.name}")
+                elif product.is_auction:
+                    print(f"✅ Auction end time already known - using FREE direct scraping for {product.name}")
+            
             # Scrape the product page
-            result = await ScraperFactory.scrape_url(product.url)
+            result = await ScraperFactory.scrape_url(product.url, use_paid_service=use_paid_service)
             
             if result['price'] is not None:
                 # Create price history entry
