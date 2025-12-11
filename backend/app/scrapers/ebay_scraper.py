@@ -42,17 +42,17 @@ class EbayScraper(BaseScraper):
             # Extract price
             price = self._extract_price(soup)
             
-            # Check availability
-            in_stock = self._check_stock(soup)
+            # Extract auction data first (we need this for stock check)
+            auction_data = self._extract_auction_data(soup)
+            
+            # Check availability (pass auction data so it knows if it's an active auction)
+            in_stock = self._check_stock(soup, is_auction=auction_data.get('is_auction', False))
             
             # Extract image
             image_url = self._extract_image(soup)
             
             # Detect currency
             currency = self._detect_currency(soup)
-            
-            # Extract auction data (if it's an auction)
-            auction_data = self._extract_auction_data(soup)
             
             logger.info(f"eBay scrape successful: ${price}, in_stock={in_stock}, image={bool(image_url)}, auction={auction_data['is_auction']}")
             
@@ -92,7 +92,7 @@ class EbayScraper(BaseScraper):
         
         return None
     
-    def _check_stock(self, soup) -> bool:
+    def _check_stock(self, soup, is_auction: bool = False) -> bool:
         """Check eBay availability"""
         # Check for out of stock indicators
         availability_indicators = [
@@ -103,6 +103,10 @@ class EbayScraper(BaseScraper):
         # If any "ended" indicator exists
         if any(indicator for indicator in availability_indicators if indicator):
             return False
+        
+        # If it's an auction, it's "in stock" by default (unless ended above)
+        if is_auction:
+            return True
         
         # Check if it's an active auction (has bids or "Place bid" button)
         auction_indicators = [
