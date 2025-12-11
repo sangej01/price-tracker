@@ -62,20 +62,20 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      {/* Product Image */}
-      <div className="aspect-w-16 aspect-h-9 bg-gray-100">
+      {/* Product Image - Clickable */}
+      <Link to={`/products/${product.id}`} className="block aspect-w-16 aspect-h-9 bg-gray-100 cursor-pointer group">
         {product.image_url ? (
           <img
             src={product.image_url}
             alt={product.name}
-            className="w-full h-48 object-cover"
+            className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity"
           />
         ) : (
-          <div className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
+          <div className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 group-hover:from-primary-100 group-hover:to-primary-200 transition-colors">
             <span className="text-4xl text-primary-300">📦</span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Product Info */}
       <div className="p-5">
