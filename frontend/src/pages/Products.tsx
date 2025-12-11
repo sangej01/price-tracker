@@ -217,9 +217,16 @@ export default function Products() {
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <form onSubmit={handleSubmit}>
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    {editingProduct ? 'Edit Product' : 'Add New Product'}
-                  </h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {editingProduct ? 'Edit Product' : 'Add New Product'}
+                    </h3>
+                    {editingProduct && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-medium bg-gray-100 text-gray-800 border border-gray-300">
+                        ID: {editingProduct.id}
+                      </span>
+                    )}
+                  </div>
 
                   {/* URL Tester */}
                   {showUrlTester && formData.url && (

@@ -184,7 +184,12 @@ export default function ProductDetail() {
       {/* Product Details - Editable */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Product Details</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-gray-900">Product Details</h2>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-medium bg-gray-100 text-gray-800 border border-gray-300">
+              ID: {id}
+            </span>
+          </div>
           <div className="flex gap-2">
             {!isEditing ? (
               <>
