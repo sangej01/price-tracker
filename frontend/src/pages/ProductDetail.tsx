@@ -186,7 +186,7 @@ export default function ProductDetail() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold text-gray-900">Product Details</h2>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-medium bg-gray-100 text-gray-800 border border-gray-300">
+            <span className="inline-flex items-center px-3 py-1 rounded-md text-base font-mono font-semibold bg-blue-50 text-blue-700 border-2 border-blue-200">
               ID: {id}
             </span>
           </div>
