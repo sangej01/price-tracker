@@ -13,10 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 class EbayScraper(BaseScraper):
-    """Custom scraper for eBay product pages"""
+    """Custom scraper for eBay product pages with auction support"""
     
-    def __init__(self, url: str):
-        super().__init__(url)
+    def __init__(self, url: str, use_paid_service: bool = False):
+        super().__init__(url, use_paid_service)
         # eBay-specific headers
         self.headers.update({
             'Accept-Language': 'en-US,en;q=0.9',
