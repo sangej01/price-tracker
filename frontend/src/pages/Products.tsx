@@ -487,15 +487,24 @@ export default function Products() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Scan Frequency (minutes)</label>
-                      <input
-                        type="number"
+                      <label className="block text-sm font-medium text-gray-700">Scan Frequency</label>
+                      <select
                         required
-                        min="1"
                         value={formData.scan_frequency_minutes}
                         onChange={(e) => setFormData({ ...formData, scan_frequency_minutes: parseInt(e.target.value) })}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                      />
+                      >
+                        <option value={15}>15 minutes</option>
+                        <option value={60}>1 hour</option>
+                        <option value={240}>4 hours</option>
+                        <option value={480}>8 hours</option>
+                        <option value={720}>12 hours</option>
+                        <option value={1440}>1 day</option>
+                        <option value={2880}>2 days</option>
+                        <option value={5760}>4 days</option>
+                        <option value={10080}>1 week</option>
+                        <option value={43200}>1 month (30 days)</option>
+                      </select>
                     </div>
 
                     <div>
