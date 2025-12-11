@@ -97,6 +97,9 @@ class BaseScraper(ABC):
 
 class GenericScraper(BaseScraper):
     """Generic scraper that attempts to find price information using common patterns"""
+    
+    def __init__(self, url: str, use_paid_service: bool = False):
+        super().__init__(url, use_paid_service)
 
     async def scrape(self) -> Dict[str, Any]:
         html = await self.fetch_page()
