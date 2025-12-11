@@ -3,7 +3,7 @@ import { ProductWithLatestPrice } from '../api/types'
 import { TrendingDown, TrendingUp, Minus, ExternalLink, Eye, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../api/client'
-import { formatCurrency } from '../utils/formatters'
+import { formatCurrency, formatNumber } from '../utils/formatters'
 
 interface ProductCardProps {
   product: ProductWithLatestPrice
@@ -44,7 +44,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
         <div className="flex items-center text-red-600">
           <TrendingUp className="h-4 w-4 mr-1" />
           <span className="text-sm font-medium">
-            +{formatCurrency(Math.abs(product.price_change), product.currency).substring(1)} ({product.price_change_percent?.toFixed(1)}%)
+            +${formatNumber(Math.abs(product.price_change))} ({product.price_change_percent?.toFixed(1)}%)
           </span>
         </div>
       )
@@ -54,7 +54,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
       <div className="flex items-center text-green-600">
         <TrendingDown className="h-4 w-4 mr-1" />
         <span className="text-sm font-medium">
-          -{formatCurrency(Math.abs(product.price_change), product.currency).substring(1)} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
+          -${formatNumber(Math.abs(product.price_change))} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
         </span>
       </div>
     )

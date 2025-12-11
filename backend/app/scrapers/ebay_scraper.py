@@ -188,22 +188,22 @@ class EbayScraper(BaseScraper):
                     soup.find('span', {'class': 'vi-tm-left'}),
                 ]
                 
-                print(f"DEBUG: Looking for auction end time...")
+                logger.debug("Looking for auction end time...")
                 for element in time_selectors:
                     if element:
                         time_text = element.get_text()
-                        print(f"DEBUG: Found time element: '{time_text}'")
+                        logger.debug(f"Found time element: '{time_text}'")
                         # Try to parse relative time and calculate end datetime
                         end_datetime = self._parse_time_remaining(time_text)
                         if end_datetime:
                             auction_data["auction_end_time"] = end_datetime
-                            print(f"DEBUG: Parsed end time: {end_datetime}")
+                            logger.debug(f"Parsed end time: {end_datetime}")
                             break
                         else:
-                            print(f"DEBUG: Could not parse time text: '{time_text}'")
+                            logger.debug(f"Could not parse time text: '{time_text}'")
                 
                 if not auction_data["auction_end_time"]:
-                    print(f"DEBUG: No time remaining element found on page")
+                    logger.debug("No time remaining element found on page")
             
             # Check for Buy It Now price (some auctions have both bid and BIN)
             bin_selectors = [
