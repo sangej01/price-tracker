@@ -503,6 +503,7 @@ export default function Products() {
                         <option value={2880}>2 days</option>
                         <option value={5760}>4 days</option>
                         <option value={10080}>1 week</option>
+                        <option value={20160}>2 weeks</option>
                         <option value={43200}>1 month (30 days)</option>
                       </select>
                     </div>

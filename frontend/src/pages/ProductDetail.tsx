@@ -232,6 +232,43 @@ export default function ProductDetail() {
           </div>
         </div>
 
+        {/* Product Image */}
+        {editImageUrl && (
+          <div className="mb-6">
+            {isEditing ? (
+              <div className="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img
+                  src={editImageUrl}
+                  alt={editName}
+                  className="object-contain w-full h-full"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/400x225?text=Image+Not+Available'
+                  }}
+                />
+              </div>
+            ) : (
+              <a
+                href={editImageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden hover:opacity-90 transition-opacity cursor-pointer group relative"
+              >
+                <img
+                  src={editImageUrl}
+                  alt={stats.product_name}
+                  className="object-contain w-full h-full"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/400x225?text=Image+Not+Available'
+                  }}
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all flex items-center justify-center">
+                  <ExternalLink className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </a>
+            )}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Product Name */}
           <div>
