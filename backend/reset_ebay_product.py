@@ -48,7 +48,6 @@ def reset_ebay_product():
             name=PRODUCT_NAME,
             url=EBAY_URL,
             vendor_id=ebay_vendor.id,
-            target_price=None,
             is_active=True,
             scan_frequency_minutes=15,  # Frequent for auction tracking
             # Auction fields will be auto-populated on first scan
