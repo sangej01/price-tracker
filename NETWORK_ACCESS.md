@@ -219,3 +219,4 @@ netsh advfirewall firewall add rule name="Price Tracker" dir=in action=allow pro
 - [QUICK_START.md](QUICK_START.md) - Setup guide
 - [CONFIG_GUIDE.md](CONFIG_GUIDE.md) - Configuration options
 
+

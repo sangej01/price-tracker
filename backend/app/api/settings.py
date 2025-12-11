@@ -118,3 +118,4 @@ def apply_frequency_to_products(
         "updated_count": updated_count
     }
 
+

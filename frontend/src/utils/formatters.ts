@@ -33,3 +33,26 @@ export function formatNumber(value: number | null | undefined, decimals: number 
   })
 }
 
+/**
+ * Get the currency symbol for a given currency code
+ * @param currency - The currency code (e.g., 'USD', 'EUR', 'GBP')
+ * @returns The currency symbol (e.g., '$', '€', '£')
+ */
+export function getCurrencySymbol(currency: string = 'USD'): string {
+  try {
+    // Use Intl.NumberFormat to get the currency symbol for any currency
+    const formatted = (0).toLocaleString('en-US', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+    // Extract just the symbol (removes the '0')
+    return formatted.replace('0', '').trim()
+  } catch {
+    // Fallback if currency code is invalid
+    return '$'
+  }
+}
+
+
