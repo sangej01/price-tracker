@@ -13,6 +13,11 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
   const [scanning, setScanning] = useState(false)
   const [days, setDays] = useState(30)
+
+  const formatUsd = (value: number | null | undefined) => {
+    if (value === null || value === undefined) return 'N/A'
+    return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  }
   
   // Editing state
   const [isEditing, setIsEditing] = useState(false)
@@ -423,19 +428,19 @@ export default function ProductDetail() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-sm font-medium text-gray-500">Current Price</h3>
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            {stats.current_price ? `$${stats.current_price.toFixed(2)}` : 'N/A'}
+            {formatUsd(stats.current_price)}
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-sm font-medium text-gray-500">Lowest Price</h3>
           <p className="mt-2 text-3xl font-bold text-green-600">
-            {stats.lowest_price ? `$${stats.lowest_price.toFixed(2)}` : 'N/A'}
+            {formatUsd(stats.lowest_price)}
           </p>
           {priceChange && priceChange > 0 && (
             <p className="mt-1 text-sm text-gray-600 flex items-center">
               <TrendingUp className="h-4 w-4 mr-1 text-red-500" />
-              ${priceChange.toFixed(2)} above lowest
+              {formatUsd(priceChange)} above lowest
             </p>
           )}
         </div>
@@ -443,14 +448,14 @@ export default function ProductDetail() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-sm font-medium text-gray-500">Highest Price</h3>
           <p className="mt-2 text-3xl font-bold text-red-600">
-            {stats.highest_price ? `$${stats.highest_price.toFixed(2)}` : 'N/A'}
+            {formatUsd(stats.highest_price)}
           </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-sm font-medium text-gray-500">Average Price</h3>
           <p className="mt-2 text-3xl font-bold text-gray-900">
-            {stats.average_price ? `$${stats.average_price.toFixed(2)}` : 'N/A'}
+            {formatUsd(stats.average_price)}
           </p>
         </div>
       </div>
