@@ -25,6 +25,7 @@ wheels/
 
 # Backend specific
 backend/venv/
+backend/.venv/
 backend/price_tracker.db
 backend/*.db
 

@@ -31,6 +31,12 @@ class Product(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     last_scanned_at = Column(DateTime, nullable=True)
     
+    # Auction tracking (optional - for eBay auctions)
+    is_auction = Column(Boolean, default=False)
+    auction_end_time = Column(DateTime, nullable=True)
+    current_bid_count = Column(Integer, nullable=True)
+    buy_it_now_price = Column(Float, nullable=True)
+    
     # Relationships
     vendor = relationship("Vendor", back_populates="products")
     price_history = relationship("PriceHistory", back_populates="product", cascade="all, delete-orphan")
@@ -45,6 +51,10 @@ class PriceHistory(Base):
     currency = Column(String, default="USD")
     in_stock = Column(Boolean, default=True)
     scraped_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Auction data (optional - captured when product is an auction)
+    bid_count = Column(Integer, nullable=True)
+    is_auction_active = Column(Boolean, nullable=True)
     
     # Relationships
     product = relationship("Product", back_populates="price_history")

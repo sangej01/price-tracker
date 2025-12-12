@@ -6,13 +6,12 @@ Get your Price Tracker running in minutes!
 
 ## 🚀 Fastest Way (Windows)
 
-**Double-click `user_tools\start-all.bat`** in File Explorer- Done! ✨
+**Double-click `user_tools\start-all.bat`** in File Explorer - Done! ✨
 
 This automatically:
-1. ✅ Creates Python virtual environment
-2. ✅ Installs backend dependencies
-3. ✅ Installs frontend dependencies
-4. ✅ Starts both servers
+1. ✅ Installs backend dependencies (with pipenv)
+2. ✅ Installs frontend dependencies (with npm)
+3. ✅ Starts both servers
 
 **To restart fresh:**
 1. Run `user_tools\kill-all.bat` - Stops all Python and Node.js processes
@@ -23,8 +22,9 @@ This automatically:
 ## 🛠️ Manual Setup
 
 ### Prerequisites
-- **Python 3.10+** ([Download](https://www.python.org/downloads/))
+- **Python 3.11+** ([Download](https://www.python.org/downloads/))
 - **Node.js 18+** ([Download](https://nodejs.org/))
+- **pipenv** (install: `pip install pipenv`)
 
 ### Option 1: Individual Scripts
 
@@ -45,11 +45,8 @@ user_tools\start-frontend.bat
 **Backend:**
 ```bash
 cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-source venv/bin/activate       # Mac/Linux
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8081
+pipenv install                 # Install dependencies
+pipenv run python run.py       # Start server (port 8081)
 ```
 
 **Frontend (new terminal):**

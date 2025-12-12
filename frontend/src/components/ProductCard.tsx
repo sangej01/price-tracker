@@ -3,6 +3,7 @@ import { ProductWithLatestPrice } from '../api/types'
 import { TrendingDown, TrendingUp, Minus, ExternalLink, Eye, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import api from '../api/client'
+import { formatCurrency, formatNumber, getCurrencySymbol } from '../utils/formatters'
 
 interface ProductCardProps {
   product: ProductWithLatestPrice
@@ -43,7 +44,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
         <div className="flex items-center text-red-600">
           <TrendingUp className="h-4 w-4 mr-1" />
           <span className="text-sm font-medium">
-            +${Math.abs(product.price_change).toFixed(2)} ({product.price_change_percent?.toFixed(1)}%)
+            +{getCurrencySymbol(product.currency)}{formatNumber(Math.abs(product.price_change), 2)} ({product.price_change_percent?.toFixed(1)}%)
           </span>
         </div>
       )
@@ -53,7 +54,7 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
       <div className="flex items-center text-green-600">
         <TrendingDown className="h-4 w-4 mr-1" />
         <span className="text-sm font-medium">
-          -${Math.abs(product.price_change).toFixed(2)} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
+          -{getCurrencySymbol(product.currency)}{formatNumber(Math.abs(product.price_change), 2)} ({Math.abs(product.price_change_percent || 0).toFixed(1)}%)
         </span>
       </div>
     )
@@ -61,20 +62,20 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      {/* Product Image */}
-      <div className="aspect-w-16 aspect-h-9 bg-gray-100">
+      {/* Product Image - Clickable */}
+      <Link to={`/products/${product.id}`} className="block aspect-w-16 aspect-h-9 bg-gray-100 cursor-pointer group">
         {product.image_url ? (
           <img
             src={product.image_url}
             alt={product.name}
-            className="w-full h-48 object-cover"
+            className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity"
           />
         ) : (
-          <div className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
+          <div className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 group-hover:from-primary-100 group-hover:to-primary-200 transition-colors">
             <span className="text-4xl text-primary-300">📦</span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Product Info */}
       <div className="p-5">
@@ -90,12 +91,42 @@ export default function ProductCard({ product, onUpdate }: ProductCardProps) {
         <div className="mb-4">
           {product.current_price ? (
             <>
+              {/* Auction Badge */}
+              {product.is_auction && (
+                <div className="flex items-center mb-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                    🔨 Auction
+                  </span>
+                  {product.current_bid_count !== null && product.current_bid_count !== undefined && (
+                    <span className="ml-2 text-xs text-gray-600">
+                      {product.current_bid_count} {product.current_bid_count === 1 ? 'bid' : 'bids'}
+                    </span>
+                  )}
+                  {product.auction_end_time && (
+                    <span className="ml-2 text-xs text-red-600 font-medium">
+                      Ends: {new Date(product.auction_end_time + 'Z').toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true 
+                      })}
+                    </span>
+                  )}
+                </div>
+              )}
               <div className="flex items-baseline mb-2">
                 <span className="text-3xl font-bold text-gray-900">
-                  ${product.current_price.toFixed(2)}
+                  {product.is_auction && <span className="text-sm text-gray-500 mr-1">Current:</span>}
+                  {formatCurrency(product.current_price, product.currency)}
                 </span>
-                <span className="ml-2 text-sm text-gray-500">{product.currency}</span>
               </div>
+              {/* Buy It Now Price for Auctions */}
+              {product.is_auction && product.buy_it_now_price && (
+                <div className="text-sm text-blue-600 font-medium mb-1">
+                  Buy It Now: {formatCurrency(product.buy_it_now_price, product.currency)}
+                </div>
+              )}
               {getPriceChangeIndicator()}
             </>
           ) : (

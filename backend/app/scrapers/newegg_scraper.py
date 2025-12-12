@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 class NeweggScraper(BaseScraper):
     """Custom scraper for Newegg product pages"""
     
-    def __init__(self, url: str):
-        super().__init__(url)
+    def __init__(self, url: str, use_paid_service: bool = False):
+        super().__init__(url, use_paid_service)
         # More realistic headers for Newegg
         self.headers.update({
             'Accept-Language': 'en-US,en;q=0.9',

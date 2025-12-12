@@ -13,11 +13,29 @@ class PriceScannerService:
     async def scan_product(product: Product, db: Session) -> bool:
         """
         Scan a single product and save price history
+        Smart cost optimization: Use paid service ONLY for first auction scan to get end time
         Returns True if successful, False otherwise
         """
         try:
+            # Determine if we need paid service
+            use_paid_service = False
+            if 'ebay.com' in product.url.lower():
+                # For eBay: ALWAYS use Bright Data on first scan to get complete HTML
+                # This ensures we can detect if it's an auction and get all data
+                if not product.last_scanned_at:
+                    use_paid_service = True
+                    print(f"💰 First eBay scan - using Bright Data for complete data: {product.name}")
+                # For subsequent scans of auctions: use Bright Data ONLY if missing end time
+                elif product.is_auction and not product.auction_end_time:
+                    use_paid_service = True
+                    print(f"💰 Auction missing end time - using Bright Data: {product.name}")
+                elif product.is_auction:
+                    print(f"✅ Auction fully tracked - using FREE direct scraping: {product.name}")
+                else:
+                    print(f"✅ Regular eBay listing - using FREE direct scraping: {product.name}")
+            
             # Scrape the product page
-            result = await ScraperFactory.scrape_url(product.url)
+            result = await ScraperFactory.scrape_url(product.url, use_paid_service=use_paid_service)
             
             if result['price'] is not None:
                 # Create price history entry
@@ -26,7 +44,10 @@ class PriceScannerService:
                     price=result['price'],
                     currency=result.get('currency', 'USD'),
                     in_stock=result.get('in_stock', True),
-                    scraped_at=datetime.utcnow()
+                    scraped_at=datetime.utcnow(),
+                    # Auction data (if present)
+                    bid_count=result.get('bid_count'),
+                    is_auction_active=result.get('is_auction', False),
                 )
                 db.add(price_history)
                 
@@ -36,6 +57,14 @@ class PriceScannerService:
                 # Update image URL if we got one
                 if result.get('image_url'):
                     product.image_url = result['image_url']
+                
+                # Update auction fields (if it's an auction)
+                if result.get('is_auction'):
+                    product.is_auction = True
+                    product.current_bid_count = result.get('bid_count')
+                    product.buy_it_now_price = result.get('buy_it_now_price')
+                    if result.get('auction_end_time'):
+                        product.auction_end_time = result.get('auction_end_time')
                 
                 db.commit()
                 

@@ -1,5 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { PriceHistory } from '../api/types'
+import { formatCurrency } from '../utils/formatters'
 
 interface PriceChartProps {
   data: PriceHistory[]
@@ -51,10 +52,10 @@ export default function PriceChart({ data }: PriceChartProps) {
             stroke="#6b7280"
             tick={{ fontSize: 12 }}
             domain={[0, 'auto']}
-            tickFormatter={(value) => `$${value.toFixed(2)}`}
+            tickFormatter={(value) => formatCurrency(value, 'USD')}
           />
           <Tooltip 
-            formatter={(value: number) => [`$${value.toFixed(2)}`, 'Price']}
+            formatter={(value: number) => [formatCurrency(value, 'USD'), 'Price']}
             contentStyle={{
               backgroundColor: 'white',
               border: '1px solid #e5e7eb',

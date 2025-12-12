@@ -1,0 +1,178 @@
+# Developer Preferences
+
+This file specifies the developer's preferred tools, frameworks, and workflows for this project.
+
+## Python Development
+
+### Dependency Management
+- **Use pipenv** (NOT venv, poetry, or conda)
+- Commands should use `pipenv run` or `pipenv shell`
+- Always include `Pipfile` and `Pipfile.lock`
+- Python version: 3.11+
+
+### Code Style
+- Use type hints where appropriate
+- Follow PEP 8 conventions
+- Clear, descriptive variable names
+
+### Backend Framework
+- **Prefer FastAPI** (first choice)
+- Flask API (second choice)
+- Django (third choice - use only if specifically needed)
+
+**Reasoning:**
+- FastAPI: Modern, fast, automatic API documentation, native async support, type hints
+- Flask: Lightweight, flexible, good for smaller projects
+- Django: Full-featured but often overkill, slower, more opinionated
+
+## JavaScript/Node Development
+
+### Package Management
+- **Use npm** (default)
+- Include `package.json` and `package-lock.json`
+
+### Frontend Framework
+- React with TypeScript
+- Vite for build tooling
+
+## Database
+
+### Primary Database
+- **SQLite** for development and production (small scale)
+- Use SQLAlchemy ORM
+- Include migration scripts in `backend/migrations/`
+
+### Schema Changes
+- Always provide migration scripts
+- Never assume database schema changes will happen automatically
+- Document migration steps in commit messages
+
+## Git Workflow
+
+### Branching Strategy
+- **Main branch**: `main` (NOT `master`)
+- **Feature branches**: `feature/description` (e.g., `feature/ebay-auction-tracking`)
+- **Chore branches**: `chore/description` (e.g., `chore/migrate-to-pipenv`)
+- **Fix branches**: `fix/description`
+
+### Commits
+- Clear, descriptive commit messages
+- Include "what" and "why" in commit descriptions
+- Group related changes together
+
+## Platform
+
+### Operating System
+- **Windows** (primary development environment)
+- Use Windows-style paths in documentation (backslashes)
+- Provide `.bat` batch scripts for common operations
+- Place user-facing scripts in `user_tools/` folder
+
+### Terminal
+- PowerShell is the default shell
+- Batch files for automation
+
+## Code Organization
+
+### File Structure
+- Keep user-facing tools in `user_tools/`
+- Keep documentation in root (README, QUICK_START) and `documentation/` folder
+- Centralize configuration in root `config.py`
+
+### Naming Conventions
+- Use snake_case for Python files/functions
+- Use kebab-case for folder names
+- Use PascalCase for React components
+
+## Time and Date Display
+
+### Formatting
+- **12-hour format with AM/PM** (NOT 24-hour)
+- Include seconds only when necessary
+- Example: "Dec 10, 2025, 11:49 AM"
+
+### Timezone
+- Store timestamps in UTC in database
+- Convert to local time for display
+- Use `'Z'` suffix when parsing UTC timestamps in JavaScript
+
+## Documentation
+
+### Style
+- Clear, step-by-step instructions
+- Include both "Easy Way" (batch scripts) and "Manual Way"
+- Provide examples in code blocks
+- Use emoji sparingly for visual organization (✅, 🚀, ⚠️)
+
+### README Requirements
+- Quick start section at the top
+- Installation instructions
+- Configuration guide
+- Common troubleshooting
+
+## Testing and Development
+
+### Before Committing
+- Test locally on Windows
+- Check that batch scripts work
+- Verify documentation matches actual commands
+- Run linter if available
+
+### Database Migrations
+- Always test migrations before committing
+- Provide rollback instructions if applicable
+- Document what each migration does
+
+## API Development
+
+### REST API Design
+- Use FastAPI for backend
+- Follow RESTful conventions
+- Include proper status codes
+- Document endpoints clearly
+
+### Error Handling
+- Return meaningful error messages
+- Log errors with context
+- Don't expose sensitive information in errors
+
+## Performance Considerations
+
+### Cost Awareness
+- Be mindful of API costs (e.g., Bright Data scraping)
+- Implement free-first fallback strategies
+- Provide cost calculators or estimates in documentation
+
+### Optimization
+- Prefer efficient solutions over complex ones
+- Document performance trade-offs
+- Cache where appropriate
+
+## Communication Style
+
+### When Implementing Features
+- Provide clear explanations of changes
+- Show before/after examples
+- Explain the "why" not just the "what"
+- Ask for clarification when requirements are ambiguous
+
+### When Things Go Wrong
+- Offer to help troubleshoot
+- Provide clear error messages
+- Suggest alternative approaches
+
+## Project-Specific Preferences
+
+### Configuration Management
+- Centralize in root `config.py`
+- Use single `.env` file at root (not separate backend/frontend)
+- Clearly separate frontend and backend configs
+- Sensitive data (API keys) in `.env`, not in code
+
+### Automation Scripts
+- Provide batch files for common tasks
+- Name them clearly (`start-all.bat`, `kill-all.bat`, `clean-data.bat`)
+- Make them auto-close when appropriate
+- Include in `user_tools/` directory
+
+$END$

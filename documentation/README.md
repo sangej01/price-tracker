@@ -27,9 +27,10 @@ Welcome to the Price Tracker documentation! This folder contains detailed guides
 - **[SCRAPER_WORKFLOW.md](SCRAPER_WORKFLOW.md)** - Visual workflow diagrams
 - **[FRONTEND_SCRAPER_INTEGRATION.md](FRONTEND_SCRAPER_INTEGRATION.md)** - Frontend integration guide
 
-## 📝 Development Notes
+## 📝 Recent Updates
 
-- **[WHAT_WAS_ADDED.md](WHAT_WAS_ADDED.md)** - Recent additions and changes
+- **[../FEATURES.md](../FEATURES.md)** - Latest features and improvements (Dec 2025)
+- **[WHAT_WAS_ADDED.md](WHAT_WAS_ADDED.md)** - Historical change log
 
 ---
 

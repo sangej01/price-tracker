@@ -9,8 +9,9 @@ from .scraping_service import ScrapingServiceClient
 class BaseScraper(ABC):
     """Base scraper class for extracting product information from websites"""
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, use_paid_service: bool = False):
         self.url = url
+        self.use_paid_service = use_paid_service  # Force paid service if needed
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
@@ -19,8 +20,18 @@ class BaseScraper(ABC):
         """
         Fetch the HTML content of the page
         Smart fallback: Try direct (FREE) first, then Bright Data (paid) if blocked
+        Override: If use_paid_service=True, skip free and go straight to Bright Data
         """
         try:
+            # If explicitly requested to use paid service, skip free attempt
+            if self.use_paid_service:
+                print(f"💰 Paid service explicitly requested for {self.url}")
+                html = await ScrapingServiceClient.fetch_url(self.url)
+                if html:
+                    return html
+                print(f"❌ Paid service failed, trying direct as fallback")
+                # Fall through to try direct as last resort
+            
             # Try direct scraping first (FREE!)
             print(f"📡 Trying direct scraping for {self.url}")
             async with aiohttp.ClientSession() as session:
@@ -86,6 +97,9 @@ class BaseScraper(ABC):
 
 class GenericScraper(BaseScraper):
     """Generic scraper that attempts to find price information using common patterns"""
+    
+    def __init__(self, url: str, use_paid_service: bool = False):
+        super().__init__(url, use_paid_service)
 
     async def scrape(self) -> Dict[str, Any]:
         html = await self.fetch_page()

@@ -57,6 +57,11 @@ class Product(ProductBase):
     is_active: bool
     created_at: datetime
     last_scanned_at: Optional[datetime] = None
+    # Auction fields
+    is_auction: bool = False
+    auction_end_time: Optional[datetime] = None
+    current_bid_count: Optional[int] = None
+    buy_it_now_price: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -77,6 +82,9 @@ class PriceHistory(PriceHistoryBase):
     id: int
     product_id: int
     scraped_at: datetime
+    # Auction fields
+    bid_count: Optional[int] = None
+    is_auction_active: Optional[bool] = None
 
     class Config:
         from_attributes = True
@@ -96,6 +104,12 @@ class ProductWithLatestPrice(BaseModel):
     in_stock: bool = True
     last_scanned_at: Optional[datetime] = None
     currency: str = "USD"
+    scan_frequency_minutes: int = 60
+    # Auction fields
+    is_auction: bool = False
+    auction_end_time: Optional[datetime] = None
+    current_bid_count: Optional[int] = None
+    buy_it_now_price: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -110,6 +124,25 @@ class ProductPriceStats(BaseModel):
     average_price: Optional[float] = None
     price_history: List[PriceHistory] = []
 
+    class Config:
+        from_attributes = True
+
+
+# Settings Schemas
+class SettingBase(BaseModel):
+    key: str
+    value: str
+
+
+class SettingCreate(SettingBase):
+    pass
+
+
+class SettingUpdate(BaseModel):
+    value: str
+
+
+class Setting(SettingBase):
     class Config:
         from_attributes = True
 

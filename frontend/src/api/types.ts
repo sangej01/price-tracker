@@ -17,6 +17,11 @@ export interface Product {
   scan_frequency_minutes: number
   created_at: string
   last_scanned_at: string | null
+  // Auction fields
+  is_auction: boolean
+  auction_end_time: string | null
+  current_bid_count: number | null
+  buy_it_now_price: number | null
 }
 
 export interface PriceHistory {
@@ -26,6 +31,9 @@ export interface PriceHistory {
   currency: string
   in_stock: boolean
   scraped_at: string
+  // Auction fields
+  bid_count: number | null
+  is_auction_active: boolean | null
 }
 
 export interface ProductWithLatestPrice {
@@ -41,6 +49,12 @@ export interface ProductWithLatestPrice {
   in_stock: boolean
   last_scanned_at: string | null
   currency: string
+  scan_frequency_minutes: number
+  // Auction fields
+  is_auction: boolean
+  auction_end_time: string | null
+  current_bid_count: number | null
+  buy_it_now_price: number | null
 }
 
 export interface ProductPriceStats {
