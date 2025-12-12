@@ -14,6 +14,12 @@ from app.scrapers.scraper_factory import ScraperFactory
 
 async def test_scraper(url: str):
     """Test scraping a specific URL"""
+    # Avoid Windows console encoding issues (e.g., cp1252) causing UnicodeEncodeError for emoji.
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")  # Python 3.7+
+    except Exception:
+        pass
+
     print(f"\n{'='*60}")
     print(f"Testing Price Scraper")
     print(f"{'='*60}")
@@ -34,19 +40,19 @@ async def test_scraper(url: str):
         print(f"{'='*60}")
         
         if result['price']:
-            print(f"✅ Price: {result['currency']} ${result['price']:.2f}")
+            print(f"Price: {result['currency']} ${result['price']:.2f}")
         else:
-            print(f"❌ Price: Not found")
+            print("Price: Not found")
         
         if result['in_stock']:
-            print(f"✅ Stock Status: In Stock")
+            print("Stock Status: In Stock")
         else:
-            print(f"❌ Stock Status: Out of Stock")
+            print("Stock Status: Out of Stock")
         
         print(f"{'='*60}\n")
         
     except Exception as e:
-        print(f"\n❌ Error: {e}\n")
+        print(f"\nError: {e}\n")
         import traceback
         traceback.print_exc()
 

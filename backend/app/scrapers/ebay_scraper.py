@@ -36,6 +36,24 @@ class EbayScraper(BaseScraper):
             if not html:
                 logger.warning(f"Failed to fetch eBay page: {self.url}")
                 return {"price": None, "in_stock": False, "currency": "USD", "image_url": None}
+
+            # eBay often serves bot-check / consent / blocked pages to direct HTTP clients.
+            # In those cases, price/stock parsing will be unreliable. Prefer a conservative
+            # "unknown but likely in stock" rather than a false out-of-stock.
+            html_l = html.lower()
+            if any(token in html_l for token in [
+                "captcha",
+                "pardon our interruption",
+                "checking your browser before you access ebay",
+                "reference id:",
+                "verify you are a human",
+                "robot check",
+                "access denied",
+                "service unavailable",
+                "enable javascript",
+            ]):
+                logger.warning(f"eBay page looks blocked/bot-checked; cannot reliably parse: {self.url}")
+                return {"price": None, "in_stock": True, "currency": "USD", "image_url": None}
             
             soup = BeautifulSoup(html, 'lxml')
             
@@ -68,18 +86,31 @@ class EbayScraper(BaseScraper):
             logger.error(f"Error scraping eBay product {self.url}: {e}")
             return {"price": None, "in_stock": False, "currency": "USD", "image_url": None}
     
-    def _extract_price(self, soup) -> float:
+    def _extract_price(self, soup) -> Optional[float]:
         """Extract price from eBay page"""
-        # Try multiple eBay price selectors
+        # First, try meta tags (often present even when DOM is complex)
+        meta_price_selectors = [
+            ('meta', {'itemprop': 'price'}),
+            ('meta', {'property': 'og:price:amount'}),
+            ('meta', {'property': 'product:price:amount'}),
+        ]
+        for tag, attrs in meta_price_selectors:
+            element = soup.find(tag, attrs)
+            if element:
+                price_text = element.get('content', '') or ''
+                price = self.parse_price(price_text)
+                if price:
+                    return price
+
+        # Try multiple eBay price selectors (additive; keep existing ones first)
         price_selectors = [
-            # Buy It Now price
+            # Classic / older layouts
             ('span', {'class': 'x-price-primary'}),
             ('div', {'class': 'x-price-primary'}),
-            # Auction current bid
             ('span', {'id': 'prcIsum'}),
-            # Alternative price locations
-            ('span', {'itemprop': 'price'}),
             ('div', {'class': 'mainPrice'}),
+            # Structured data
+            ('span', {'itemprop': 'price'}),
         ]
         
         for tag, attrs in price_selectors:
@@ -89,24 +120,53 @@ class EbayScraper(BaseScraper):
                 price = self.parse_price(price_text)
                 if price:
                     return price
+
+        # Newer eBay layout: price is often inside nested ux-textspans under x-price-primary
+        css_selectors = [
+            'div.x-price-primary span.ux-textspans',
+            'span.x-price-primary span.ux-textspans',
+            '[data-testid="x-price-primary"] span.ux-textspans',
+            '[data-testid="x-price-primary"] span',  # fallback
+        ]
+        for selector in css_selectors:
+            el = soup.select_one(selector)
+            if el:
+                price_text = el.get_text(strip=True)
+                price = self.parse_price(price_text)
+                if price:
+                    return price
         
         return None
     
     def _check_stock(self, soup, is_auction: bool = False) -> bool:
         """Check eBay availability"""
-        # Check for specific "auction/listing ended" indicators (not just any "ended" text)
-        ended_indicators = [
-            soup.find('div', {'class': 'vi-overlayTitleBar'}),
-            soup.find('span', string=re.compile(r'(auction|listing)\s+ended', re.I)),
-            soup.find('div', string=re.compile(r'(auction|listing)\s+ended', re.I)),
+        # Be conservative: only mark out-of-stock when we see explicit "listing ended" messaging.
+        ended_phrases = [
+            r"\bthis listing was ended\b",
+            r"\bthis listing has ended\b",
+            r"\bthe seller ended this listing\b",
+            r"\bauction ended\b",
+            r"\blisting ended\b",
+            r"\bthis item is out of stock\b",
         ]
-        
-        # If any "ended" indicator exists
-        if any(indicator for indicator in ended_indicators if indicator):
+
+        overlay = soup.find('div', {'class': 'vi-overlayTitleBar'})
+        if overlay:
+            overlay_text = overlay.get_text(" ", strip=True)
+            if overlay_text and re.search("|".join(ended_phrases), overlay_text, re.I):
+                return False
+
+        page_text = soup.get_text(" ", strip=True)
+        if page_text and re.search("|".join(ended_phrases), page_text, re.I):
             return False
         
         # If it's an auction, it's "in stock" by default (unless ended above)
         if is_auction:
+            return True
+
+        # Positive signals: if we can see purchase CTAs, treat as in stock.
+        add_to_cart = soup.find('a', {'id': 'atcBtn'}) or soup.find('a', {'class': 'ux-call-to-action'})
+        if add_to_cart:
             return True
         
         # Check if it's an active auction (has bids or "Place bid" button)
@@ -124,13 +184,9 @@ class EbayScraper(BaseScraper):
             qty_text = quantity.get_text().lower()
             if 'available' in qty_text or 'in stock' in qty_text:
                 return True
-            if 'sold' in qty_text or 'unavailable' in qty_text:
+            # Avoid treating generic "X sold" counters as out-of-stock.
+            if any(phrase in qty_text for phrase in ['sold out', 'out of stock', 'unavailable', 'no longer available']):
                 return False
-        
-        # Check for "Add to cart" button (usually means in stock)
-        add_to_cart = soup.find('a', {'id': 'atcBtn'}) or soup.find('a', {'class': 'ux-call-to-action'})
-        if add_to_cart:
-            return True
         
         # Default to True if we can't determine
         return True

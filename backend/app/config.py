@@ -43,6 +43,10 @@ class Settings:
     BRIGHTDATA_PASSWORD: Optional[str] = os.getenv("BRIGHTDATA_PASSWORD")
     BRIGHTDATA_HOST: Optional[str] = os.getenv("BRIGHTDATA_HOST")
     BRIGHTDATA_PORT: Optional[int] = int(os.getenv("BRIGHTDATA_PORT")) if os.getenv("BRIGHTDATA_PORT") else None
+
+    # ScraperAPI (optional)
+    # NOTE: This is only used if SCRAPING_SERVICE=scraperapi
+    SCRAPERAPI_KEY: Optional[str] = os.getenv("SCRAPERAPI_KEY")
     
     @property
     def is_brightdata_configured(self) -> bool:
@@ -60,6 +64,11 @@ class Settings:
             return True
         
         return False
+
+    @property
+    def is_scraperapi_configured(self) -> bool:
+        """Check if ScraperAPI is properly configured"""
+        return self.SCRAPING_SERVICE == "scraperapi" and bool(self.SCRAPERAPI_KEY)
 
 
 settings = Settings()
