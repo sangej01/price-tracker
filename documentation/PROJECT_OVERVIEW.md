@@ -92,9 +92,14 @@ Double-click `start-all.bat` in File Explorer - Done! 🎉
 1. Backend: `cd backend && uvicorn app.main:app --reload`
 2. Frontend: `cd frontend && npm run dev`
 
+### Remote access (LAN / Tailscale)
+- **Backend**: bind to **`0.0.0.0`** (all interfaces). Binding to **`127.0.0.1`** is localhost-only and will not work from another device.
+- **Frontend (Vite dev server)**: must bind to **`0.0.0.0`** and allow non-local hostnames (Vite 5 host check).
+  - This repo sets `server.host: true` and `server.allowedHosts: true` in `frontend/vite.config.ts`.
+
 ## 🌐 Access Points
 
-- **Frontend Dashboard**: http://localhost:3000
+- **Frontend Dashboard**: http://localhost:3001
 - **Backend API**: http://localhost:8081
 - **API Documentation**: http://localhost:8081/docs
 - **Alternative Docs**: http://localhost:8081/redoc

@@ -2,12 +2,6 @@
 
 Your Price Tracker supports **optional** integration with Bright Data to bypass anti-bot protection on protected websites!
 
-## 💡 Smart Cost-Saving Feature
-
-**The app automatically tries FREE direct scraping first!** Bright Data is only used as a fallback when sites block direct access.
-
-**This saves you 75%+ on costs** - you only pay for sites that actually need commercial scraping (like eBay), while Amazon and Newegg work for FREE!
-
 ## 🎯 Why Use Bright Data?
 
 Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
@@ -69,14 +63,13 @@ Major e-commerce sites (Amazon, eBay, Newegg) block direct scraping with:
 
 After setup, you'll receive:
 - **API Key** (long string starting with `brd_`)
-- **Proxy Name** (e.g., `residential_proxy1`, `datacenter_proxy1`)
-  - Note: Bright Data may call this "Zone" in their API docs
+- **Zone Name** (e.g., `residential_proxy1`, `datacenter_proxy1`)
 - **Host**: `brd.superproxy.io`
 - **Port**: (e.g., `33335`)
 
 ### Step 4: Configure Price Tracker
 
-Create `backend/.env` file:
+Add to your root `.env` file (project root):
 
 ```env
 # Enable Bright Data
@@ -87,7 +80,7 @@ BRIGHTDATA_API_KEY=brd_xxxxxxxxxxxxxxxxxxxxxxxxxx
 BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
 
-**Note:** You don't need username, password, host, or port for Unlocker API - just API key and proxy name!
+**Note:** You don't need username, password, host, or port for Unlocker API - just API key and zone!
 
 ### Step 5: Restart Backend
 
@@ -107,30 +100,18 @@ start-backend.bat
 
 ### Check Backend Logs
 
-When scanning products, you'll see the **smart fallback** in action:
+When scanning products, you should see:
 
-**✅ Direct Scraping (FREE):**
+**✅ Success:**
 ```
-📡 Trying direct scraping for https://www.amazon.com/...
-✅ Direct scraping succeeded for https://www.amazon.com/...
-✅ Successfully scanned PNY RTX 4000: $1420.00
+🔓 Using Bright Data Unlocker API for https://www.ebay.com/itm/...
+✅ Bright Data Unlocker API: Successfully fetched https://www.ebay.com/itm/...
+✅ Successfully scanned New NVIDIA RTX 4000 SFF Ada 20GB: $1349.95
 ```
-
-**💰 Automatic Fallback to Bright Data:**
-```
-📡 Trying direct scraping for https://www.ebay.com/itm/...
-🚫 Direct scraping blocked (HTTP 403) for https://www.ebay.com/itm/...
-💰 Falling back to commercial scraping for https://www.ebay.com/itm/...
-🔓 Using Bright Data Unlocker API
-✅ Bright Data Unlocker API: Successfully fetched
-✅ Successfully scanned New NVIDIA RTX 4000: $1349.95
-```
-
-**This means you're only paying for what you actually need!**
 
 **❌ Configuration Error:**
 ```
-⚠️ Bright Data not configured, using direct scraping only
+⚠️ Bright Data not configured, falling back to direct scraping
 ```
 
 ### Use the Test Tool
@@ -231,7 +212,7 @@ SCRAPING_TIMEOUT=30
 ### Issue: "Bright Data not configured"
 
 **Check:**
-1. `.env` file exists in `backend/` folder
+1. Root `.env` file exists (project root)
 2. `SCRAPING_SERVICE=brightdata` is set
 3. Both `BRIGHTDATA_API_KEY` and `BRIGHTDATA_PROXY_NAME` are set
 4. No typos in variable names
@@ -239,7 +220,7 @@ SCRAPING_TIMEOUT=30
 
 ### Issue: HTTP 400 "zone is required"
 
-**Solution:** Add `BRIGHTDATA_PROXY_NAME` to `.env`
+**Solution:** Ensure `BRIGHTDATA_PROXY_NAME` is set in `.env`
 ```env
 BRIGHTDATA_PROXY_NAME=residential_proxy1
 ```
@@ -261,8 +242,8 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1
 
 **Solution:** Upgrade to Residential proxies
 ```env
-# Change proxy from datacenter to residential
-BRIGHTDATA_PROXY_NAME=residential_proxy1
+# Change zone from datacenter to residential
+BRIGHTDATA_ZONE=residential_proxy1
 ```
 
 ---
@@ -296,7 +277,7 @@ To disable Bright Data and use direct scraping:
 # Comment out or remove these lines
 # SCRAPING_SERVICE=brightdata
 # BRIGHTDATA_API_KEY=...
-# BRIGHTDATA_ZONE=...
+# BRIGHTDATA_PROXY_NAME=...
 ```
 
 Or set to direct:

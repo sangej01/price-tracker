@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081'
+// IMPORTANT:
+// - If you're accessing the frontend remotely (LAN/Tailscale), DO NOT default to http://localhost:8081
+//   because "localhost" would be the *client* machine.
+// - Default to same-origin instead, so requests like "/api/..." hit the Vite dev server and get proxied.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

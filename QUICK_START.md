@@ -44,8 +44,14 @@ user_tools\start-frontend.bat
 
 **Backend:**
 ```bash
+cd .
+# Use backend/Pipfile while running from the project root:
+# PowerShell:
+#   $env:PIPENV_PIPFILE="backend/Pipfile"
+# CMD:
+#   set PIPENV_PIPFILE=backend\\Pipfile
+pipenv sync || pipenv install  # Install dependencies (backend Pipfile)
 cd backend
-pipenv install                 # Install dependencies
 pipenv run python run.py       # Start server (port 8081)
 ```
 
@@ -64,7 +70,7 @@ Once started, open your browser:
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Dashboard** | http://localhost:3000 | Main application UI |
+| **Dashboard** | http://localhost:3001 | Main application UI |
 | **Backend API** | http://localhost:8081 | REST API server |
 | **API Docs** | http://localhost:8081/docs | Interactive API documentation |
 
@@ -107,7 +113,7 @@ For protected sites (Amazon with CAPTCHA, eBay auctions), use commercial service
 
 ### Bright Data (Pay-Per-Use)
 ```bash
-# Create backend/.env file
+# Add to your root .env file (project root)
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
 BRIGHTDATA_PROXY_NAME=residential_proxy1
@@ -151,11 +157,16 @@ user_tools\start-all.bat
 uvicorn app.main:app --reload --port 8082
 ```
 
-**Frontend (port 3000):**
+**Frontend (port 3001):**
 ```bash
 # Edit frontend/vite.config.ts
 server: { port: 3001 }
 ```
+
+### Access from another device (LAN / Tailscale)
+- **Backend**: must bind to **`0.0.0.0`** to be reachable remotely (binding to **`127.0.0.1`** is localhost-only).
+- **Frontend (Vite)**: must bind to **`0.0.0.0`** and allow non-local hostnames.
+  - This repo does that in `frontend/vite.config.ts` and `user_tools/start-frontend.bat`.
 
 ### Scraping Not Working
 

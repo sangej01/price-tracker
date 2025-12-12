@@ -14,11 +14,10 @@ A full-stack web application that monitors product prices, tracks historical dat
 ## ✨ Key Features
 
 - 🔍 **Smart Web Scraping** - Vendor-specific scrapers (Amazon, eBay, Newegg) with fallback support
-- 🔨 **eBay Auction Tracking** - Monitor live auctions with bid count and time remaining
 - 🌐 **Commercial Scraping Integration** - Optional Bright Data for protected sites
 - 📊 **Real-time Price Tracking** - Monitor prices with visual change indicators
 - 📈 **Interactive Charts** - Historical price trends with Recharts
-- 🔄 **Automated Scheduling** - Configurable scan frequencies per product/vendor
+- 🔄 **Automated Scheduling** - Configurable scan frequencies per product
 - 💼 **Multi-Vendor Support** - Track products across different websites
 - 📱 **Modern UI** - Responsive design with Tailwind CSS
 - 📦 **Stock Status Monitoring** - Track product availability
@@ -31,27 +30,23 @@ A full-stack web application that monitors product prices, tracks historical dat
 **See [QUICK_START.md](QUICK_START.md) for detailed setup instructions**
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.10+
 - Node.js 18+
-- pipenv (install: `pip install pipenv`)
 
 ### Quick Setup (Windows)
 ```powershell
 # Run everything with one command
-cd user_tools
-.\start-all.bat
-
-# To restart fresh:
-.\kill-all.bat   # Stop all processes
-.\start-all.bat  # Start clean
+start-all.bat
 ```
 
 ### Manual Setup
 ```bash
 # Backend
 cd backend
-pipenv install           # Install dependencies
-pipenv run python run.py # Start server
+python -m venv venv
+venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 
 # Frontend (new terminal)
 cd frontend
@@ -60,7 +55,7 @@ npm run dev
 ```
 
 **Access:**
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3001
 - Backend API: http://localhost:8081
 - API Docs: http://localhost:8081/docs
 
@@ -145,7 +140,7 @@ Click **"View Details"** on any product for:
 
 **Quick Setup:**
 ```bash
-# Edit .env at project root
+# Add to your root .env file (project root)
 SCRAPING_SERVICE=brightdata
 BRIGHTDATA_API_KEY=your_api_key
 BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
@@ -157,8 +152,6 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 
 ### For Users
 - **[QUICK_START.md](QUICK_START.md)** - Setup and installation
-- **[FEATURES.md](FEATURES.md)** - Latest features and improvements ✨ NEW
-- **[NETWORK_ACCESS.md](NETWORK_ACCESS.md)** - Access from other devices / Tailscale
 - **[documentation/QUICK_USER_GUIDE.md](documentation/QUICK_USER_GUIDE.md)** - How to use the app
 - **[documentation/DEMO_SUMMARY.md](documentation/DEMO_SUMMARY.md)** - Visual walkthrough
 
@@ -166,32 +159,11 @@ BRIGHTDATA_PROXY_NAME=residential_proxy1  # Your proxy name from Bright Data
 - **[documentation/PROJECT_OVERVIEW.md](documentation/PROJECT_OVERVIEW.md)** - Architecture details
 - **[documentation/CUSTOM_SCRAPERS_GUIDE.md](documentation/CUSTOM_SCRAPERS_GUIDE.md)** - Add vendor scrapers
 - **[documentation/SCRAPING_SERVICES_GUIDE.md](documentation/SCRAPING_SERVICES_GUIDE.md)** - Commercial APIs setup
-- **[.cursor/rules/dev-preferences.mdc](.cursor/rules/dev-preferences.mdc)** - Developer preferences
 - **[documentation/README.md](documentation/README.md)** - Full documentation index
 
 ---
 
 ## 🛠️ Development
-
-### Available User Tools
-
-All user tools are in the `user_tools/` folder:
-
-| Script | Purpose |
-|--------|---------|
-| `start-all.bat` | Start both backend and frontend servers |
-| `start-backend.bat` | Start backend only (port 8081) |
-| `start-frontend.bat` | Start frontend only (port 3000) |
-| `kill-all.bat` | Stop all Python and Node.js processes |
-| `apply_config.py` | Apply config.py changes to .env file |
-| `clean-data.bat` | Clean bad price data from database |
-
-**Typical workflow:**
-```powershell
-cd user_tools
-.\kill-all.bat    # Stop everything
-.\start-all.bat   # Start fresh
-```
 
 ### Project Structure
 ```
@@ -257,30 +229,28 @@ python backend/test_scraper.py https://product-url
 
 ### Central Configuration (Recommended)
 
-All settings are in **`.env`** at the project root (auto-generated from `config.py`):
+All settings are in **`config.py`** at the root:
 
-**To change settings:**
-1. Edit `config.py` with your desired values
-2. Run `python user_tools\apply_config.py` to regenerate `.env`
-3. For secrets (API keys), edit them directly in `.env` (don't commit!)
+```python
+# config.py
+class BackendConfig:
+    PORT = 8081                    # Change server port
+    SCRAPING_SERVICE = "brightdata"  # Enable Bright Data
+    BRIGHTDATA_API_KEY = "your_key"
+```
 
+**Apply changes:**
 ```bash
-# .env (at project root)
-SERVER_PORT=8081
-SCRAPING_SERVICE=brightdata
-BRIGHTDATA_API_KEY=your_key
-BRIGHTDATA_PROXY_NAME=your_proxy_name
+python user_tools/apply_config.py  # Generates the single root .env file
 ```
 
 **See:** [CONFIG_GUIDE.md](CONFIG_GUIDE.md) for full documentation
 
 ### Manual Configuration (Advanced)
-Edit `.env` at project root directly (will be overwritten by `user_tools\apply_config.py`)
+Edit the single root `.env` directly (overwritten by `user_tools/apply_config.py`)
 
 ### Scan Frequency
 - **Per-product**: Set when creating/editing products (default: 60 minutes)
-- **Per-vendor**: Set default frequency for all products from a vendor
-- **Settings page**: Manage all scan frequencies in one place
 - **Global check**: Scheduler runs every 15 minutes to find due products
 
 ---
@@ -299,6 +269,14 @@ Edit `.env` at project root directly (will be overwritten by `user_tools\apply_c
 - Ensure backend is running on port 8081
 - Check CORS settings in `backend/app/main.py`
 
+### Accessing the app over LAN / Tailscale
+- **Backend binding**: For any remote access (including Tailscale), the backend must bind to **`0.0.0.0`** (all interfaces). Binding to **`127.0.0.1`** will work only from the same machine.
+  - Default is already `SERVER_HOST=0.0.0.0` (see root `.env`).
+- **Frontend (Vite dev server) binding**: The dev server must listen on all interfaces and allow the Tailscale hostname.
+  - This repo config sets `server.host: true` and `server.allowedHosts: true` in `frontend/vite.config.ts`.
+  - `user_tools/start-frontend.bat` starts Vite with `--host 0.0.0.0`.
+- **API base URL**: Don’t use `http://localhost:8081` for remote clients. The frontend defaults to same-origin so `/api/...` requests go through the Vite proxy to the backend.
+
 ### Database Reset
 ```bash
 # Delete database and restart
@@ -311,10 +289,8 @@ python -m app.main
 
 ## 🚧 Future Enhancements
 
-- [x] **eBay Auction Tracking** ✅ (Completed Dec 2025)
-- [x] **Multi-currency Support** ✅ (Completed Dec 2025)
-- [x] **Per-vendor Scan Frequencies** ✅ (Completed Dec 2025)
 - [ ] Email/SMS price drop alerts
+- [ ] Multi-currency support
 - [ ] Export to CSV/Excel
 - [ ] Mobile app (React Native)
 - [ ] Browser extension

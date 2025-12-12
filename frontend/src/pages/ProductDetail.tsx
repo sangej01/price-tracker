@@ -31,14 +31,16 @@ export default function ProductDetail() {
     if (!id) return
     try {
       setLoading(true)
-      const [statsRes, scraperRes, productRes, vendorsRes] = await Promise.all([
-        dashboardService.getProductStats(parseInt(id), days),
-        productService.getScraperInfo(parseInt(id)),
-        productService.getById(parseInt(id)),
-        vendorService.getAll()
+      const productId = parseInt(id)
+
+      // Fetch core data; don't let optional calls (like scraper-info) break the entire page.
+      const [statsRes, productRes, vendorsRes] = await Promise.all([
+        dashboardService.getProductStats(productId, days),
+        productService.getById(productId),
+        vendorService.getAll(),
       ])
+
       setStats(statsRes.data)
-      setScraperInfo(scraperRes.data)
       setVendors(vendorsRes.data)
       
       // Initialize edit fields with current values
@@ -50,6 +52,15 @@ export default function ProductDetail() {
       setEditVendorId(product.vendor_id)
       setEditFrequency(product.scan_frequency_minutes)
       setEditActive(product.is_active)
+
+      // Optional: scraper info
+      try {
+        const scraperRes = await productService.getScraperInfo(productId)
+        setScraperInfo(scraperRes.data)
+      } catch (error) {
+        console.warn('Could not load scraper info:', error)
+        setScraperInfo(null)
+      }
     } catch (error) {
       console.error('Error fetching product stats:', error)
     } finally {

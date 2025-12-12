@@ -11,7 +11,8 @@ class BaseScraper(ABC):
 
     def __init__(self, url: str, use_paid_service: bool = False):
         self.url = url
-        self.use_paid_service = use_paid_service  # Force paid service if needed
+        # If True, prefer a paid scraping service (if configured) before direct requests.
+        self.use_paid_service = use_paid_service
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
@@ -19,55 +20,23 @@ class BaseScraper(ABC):
     async def fetch_page(self) -> Optional[str]:
         """
         Fetch the HTML content of the page
-        Smart fallback: Try direct (FREE) first, then Bright Data (paid) if blocked
-        Override: If use_paid_service=True, skip free and go straight to Bright Data
+        Uses third-party service if configured, otherwise direct scraping
         """
         try:
-            # If explicitly requested to use paid service, skip free attempt
-            if self.use_paid_service:
-                print(f"💰 Paid service explicitly requested for {self.url}")
-                html = await ScrapingServiceClient.fetch_url(self.url)
-                if html:
-                    return html
-                print(f"❌ Paid service failed, trying direct as fallback")
-                # Fall through to try direct as last resort
-            
-            # Try direct scraping first (FREE!)
-            print(f"📡 Trying direct scraping for {self.url}")
-            async with aiohttp.ClientSession() as session:
-                async with session.get(self.url, headers=self.headers, timeout=30) as response:
-                    if response.status == 200:
-                        html = await response.text()
-                        # Basic validation - check if we got actual content
-                        if len(html) > 1000 and '<html' in html.lower():
-                            print(f"✅ Direct scraping succeeded for {self.url}")
-                            return html
-                        else:
-                            print(f"⚠️ Direct scraping got suspicious response (len={len(html)})")
-                    elif response.status in [403, 503]:
-                        print(f"🚫 Direct scraping blocked (HTTP {response.status}) for {self.url}")
-                    else:
-                        print(f"❌ Direct scraping failed (HTTP {response.status}) for {self.url}")
-            
-            # Fallback to commercial scraping service (if configured)
-            print(f"💰 Falling back to commercial scraping for {self.url}")
+            # Try third-party scraping service first (if configured)
+            # NOTE: Service selection is controlled by backend settings.
             html = await ScrapingServiceClient.fetch_url(self.url)
             if html:
                 return html
             
-            print(f"❌ All scraping methods failed for {self.url}")
-            return None
-            
+            # Fallback to direct scraping
+            async with aiohttp.ClientSession() as session:
+                async with session.get(self.url, headers=self.headers, timeout=30) as response:
+                    if response.status == 200:
+                        return await response.text()
+                    return None
         except Exception as e:
-            print(f"❌ Error fetching page {self.url}: {e}")
-            # Try commercial service as last resort
-            try:
-                html = await ScrapingServiceClient.fetch_url(self.url)
-                if html:
-                    print(f"✅ Commercial service succeeded after error")
-                    return html
-            except:
-                pass
+            print(f"Error fetching page {self.url}: {e}")
             return None
 
     def parse_price(self, price_text: str) -> Optional[float]:
@@ -97,9 +66,6 @@ class BaseScraper(ABC):
 
 class GenericScraper(BaseScraper):
     """Generic scraper that attempts to find price information using common patterns"""
-    
-    def __init__(self, url: str, use_paid_service: bool = False):
-        super().__init__(url, use_paid_service)
 
     async def scrape(self) -> Dict[str, Any]:
         html = await self.fetch_page()

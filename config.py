@@ -5,7 +5,7 @@ All user-configurable settings for the Price Tracker application.
 
 ⚠️ IMPORTANT: This file contains DEFAULTS only!
    - For non-sensitive settings: Edit values here, run `python apply_config.py`
-   - For API keys/secrets: Set directly in .env file at project root (never commit!)
+   - For API keys/secrets: Set directly in the single root `.env` file (never commit!)
    
 Safe to edit here:
   - PORT, HOST, SCAN_INTERVAL_MINUTES, timeouts, etc.
@@ -54,15 +54,15 @@ class BackendConfig:
     
     # Commercial Scraping Service (Optional)
     # Options: "direct", "brightdata"
-    # NOTE: These are just DEFAULTS. Set actual values in .env file at project root!
+    # NOTE: These are just DEFAULTS. Set actual values in the root `.env` file!
     SCRAPING_SERVICE = "direct"   # Default to direct scraping
     
     # Bright Data Configuration
-    # ⚠️ DO NOT put real API keys here! Set them in .env file at project root:
+    # ⚠️ DO NOT put real API keys here! Set them in the root `.env` file:
     #    BRIGHTDATA_API_KEY=your_actual_key
     #    BRIGHTDATA_PROXY_NAME=your_proxy_name
     BRIGHTDATA_API_KEY = ""       # Default (empty = not configured)
-    BRIGHTDATA_PROXY_NAME = ""    # Default (your proxy/zone name from Bright Data)
+    BRIGHTDATA_PROXY_NAME = "residential_proxy1"    # Default (your proxy/zone name from Bright Data)
 
 
 # =============================================================================
@@ -76,7 +76,7 @@ class FrontendConfig:
     API_BASE_URL = f"http://localhost:{BackendConfig.PORT}"
     
     # Development Server
-    DEV_PORT = 3000               # Frontend dev server port
+    DEV_PORT = 3001               # Frontend dev server port
     
     # UI Settings
     PRODUCTS_PER_PAGE = 20        # Pagination
@@ -92,22 +92,22 @@ class FrontendConfig:
 backend = BackendConfig()
 frontend = FrontendConfig()
 
-# Generate single .env file at project root
+# Generate .env files
 def generate_env_files():
-    """Generate single .env file at project root with all configuration"""
+    """Generate a single `.env` file at the project root for both backend and frontend."""
     
-    # Single .env file with all settings
-    env_content = f"""# Price Tracker Configuration (Auto-generated from config.py)
-# =============================================================================
-# This file is auto-generated. To change settings:
-# 1. Edit config.py with your desired values
-# 2. Run: python apply_config.py
-# 3. For secrets (API keys), edit them directly in this file (DON'T commit!)
-# =============================================================================
+    # Root .env (used by BOTH backend and frontend)
+    root_env = f"""# Price Tracker Configuration (Auto-generated from config.py)
+# This single file is used by BOTH the backend and frontend.
+#
+# Backend reads this via: backend/app/config.py
+# Frontend reads this via: frontend/vite.config.ts (envDir set to project root)
+#
+# NOTE: Vite only exposes variables prefixed with VITE_ to browser code.
 
-# =============================================================================
-# BACKEND CONFIGURATION
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Backend
+# -----------------------------------------------------------------------------
 SERVER_HOST={BackendConfig.HOST}
 SERVER_PORT={BackendConfig.PORT}
 DEBUG={str(BackendConfig.DEBUG).lower()}
@@ -119,41 +119,41 @@ SCRAPING_DELAY={BackendConfig.SCRAPING_DELAY}
 SCRAPING_TIMEOUT={BackendConfig.SCRAPING_TIMEOUT}
 
 SCRAPING_SERVICE={BackendConfig.SCRAPING_SERVICE}
-
-# Bright Data Credentials
-# ⚠️ IMPORTANT: Replace these with your actual credentials from Bright Data!
-# Don't commit real API keys to version control.
 BRIGHTDATA_API_KEY={BackendConfig.BRIGHTDATA_API_KEY}
 BRIGHTDATA_PROXY_NAME={BackendConfig.BRIGHTDATA_PROXY_NAME}
-
-# =============================================================================
-# FRONTEND CONFIGURATION
-# =============================================================================
-VITE_API_BASE_URL={FrontendConfig.API_BASE_URL}
 """
     
-    # Write single .env file at project root
-    with open(".env", "w", encoding="utf-8") as f:
-        f.write(env_content)
-    print("✅ Generated .env at project root")
+    # -----------------------------------------------------------------------------
+    # Frontend (Vite)
+    # -----------------------------------------------------------------------------
+    # Keep this as VITE_* so it is available in browser code via import.meta.env
+    #
+    # For LAN/Tailscale access: DO NOT set this to http://localhost:8081 unless you're only ever
+    # accessing the frontend from the same machine. Default to empty so the frontend uses
+    # same-origin and the Vite dev server proxy handles /api -> backend.
+    root_env += """
+VITE_API_BASE_URL=
+"""
     
-    print("\n📝 Configuration applied!")
-    print("   - All settings are in .env at project root")
-    print("   - Backend and frontend will both use this file")
-    print("   - Add your Bright Data credentials to .env if needed")
-    print("   - Restart servers to use new settings.")
+    # Write files
+    with open(".env", "w", encoding="utf-8") as f:
+        f.write(root_env)
+    print("✅ Generated .env (project root)")
+    
+    print("\n📝 Configuration applied! Restart servers to use new settings.")
+    print("ℹ️ Note: Per-folder env files (backend/.env, frontend/.env) are no longer used or generated.")
 
 
 if __name__ == "__main__":
     print("🔧 Price Tracker Configuration")
     print("=" * 50)
-    print(f"\n📡 BACKEND")
+    print("\n📡 BACKEND")
     print(f"   Host: {BackendConfig.HOST}")
     print(f"   Port: {BackendConfig.PORT}")
     print(f"   API URL: http://localhost:{BackendConfig.PORT}")
     print(f"   Scraping Service: {BackendConfig.SCRAPING_SERVICE}")
     
-    print(f"\n💻 FRONTEND")
+    print("\n💻 FRONTEND")
     print(f"   Dev Port: {FrontendConfig.DEV_PORT}")
     print(f"   API Connection: {FrontendConfig.API_BASE_URL}")
     
