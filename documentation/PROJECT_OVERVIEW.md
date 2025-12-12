@@ -51,7 +51,7 @@ Price Tracker/
 │   │   ├── schemas.py           # API schemas
 │   │   ├── scheduler.py         # Background jobs
 │   │   └── main.py              # FastAPI app
-│   ├── Pipfile / Pipfile.lock   # Python deps (pipenv)
+│   ├── (uses root Pipfile / Pipfile.lock)   # Python deps (pipenv)
 │   └── seed_data.py            # Sample data
 ├── frontend/                    # React frontend
 │   ├── src/

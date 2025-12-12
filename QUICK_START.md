@@ -45,12 +45,8 @@ user_tools\start-frontend.bat
 **Backend:**
 ```bash
 cd .
-# Use backend/Pipfile while running from the project root:
-# PowerShell:
-#   $env:PIPENV_PIPFILE="backend/Pipfile"
-# CMD:
-#   set PIPENV_PIPFILE=backend\\Pipfile
-pipenv sync || pipenv install  # Install dependencies (backend Pipfile)
+# From the project root:
+pipenv sync || pipenv install  # Install dependencies
 cd backend
 pipenv run python run.py       # Start server (port 8081)
 ```

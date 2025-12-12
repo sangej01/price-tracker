@@ -8,7 +8,7 @@ set "NO_PAUSE=0"
 if /i "%~1"=="--no-pause" set "NO_PAUSE=1"
 
 REM Always resolve paths relative to this script (works when double-clicked)
-REM We run from the PROJECT ROOT, but point pipenv at backend\Pipfile.
+REM We run from the PROJECT ROOT and use the single root Pipfile/Pipfile.lock.
 cd /d "%~dp0\.." || (
     echo [ERROR] Could not cd into project root from: %~dp0
     pause
@@ -22,13 +22,22 @@ if errorlevel 1 (
     goto :venv_fallback
 )
 
-if not exist "backend\Pipfile" (
-    echo [WARN] pipenv is installed but backend\Pipfile is missing. Falling back to venv+pip...
+if not exist "Pipfile" (
+    echo [WARN] pipenv is installed but root Pipfile is missing. Falling back to venv+pip...
     goto :venv_fallback
 )
 
-echo Using pipenv (backend\Pipfile found)...
-for %%I in ("backend\Pipfile") do set "PIPENV_PIPFILE=%%~fI"
+echo Using pipenv (root Pipfile found)...
+
+REM Force pipenv to use Python 3.11 (avoids slow builds / Rust toolchain issues on 3.13)
+set "PY311_EXE="
+for /f "usebackq delims=" %%P in (`py -3.11 -c "import sys; print(sys.executable)" 2^>nul`) do set "PY311_EXE=%%P"
+if not defined PY311_EXE (
+    echo [ERROR] Python 3.11 not found. Install Python 3.11+ or ensure the Windows 'py' launcher can run: py -3.11
+    set "EXITCODE=1"
+    goto :maybe_pause_and_exit
+)
+set "PIPENV_PYTHON=%PY311_EXE%"
 
 echo Installing/updating dependencies with pipenv...
 pipenv sync
